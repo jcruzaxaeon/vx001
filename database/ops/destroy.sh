@@ -10,7 +10,7 @@
 #   - DANGER: This script DELETES databases and users!
 
 #VARIABLES
-ENV_CODE="${1:-dev}"
+ENV_CODE="${1:-rca}"
 ENV_FILE="$(dirname "$0")/../../.env.${ENV_CODE}"
 
 #FUNCTIONS
@@ -52,14 +52,15 @@ fi
 
 echo "🧹 Starting database teardown for $ENV_CODE environment..."
 
-#DELETE DATABASE AND USER
+#DELETE DATABASE
 mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_ROOT_USER" -p"$DB_ROOT_PASS" << EOF
 
 -- Drop the database (this deletes everything inside it)
 DROP DATABASE IF EXISTS \`$DB_NAME\`;
 
--- Drop the user
+-- [ ] Drop the user
 --DROP USER IF EXISTS '$DB_USER'@'$DB_USER_HOST';
+-- [ ] Drop global privileges for the user
 
 -- Show remaining databases
 SHOW DATABASES;

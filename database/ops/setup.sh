@@ -12,7 +12,7 @@
 #   from `.env.{environment code}` files
 
 #VARIABLES
-ENV_CODE="${1:-dev}"   #`:-dev` => defaults to 'dev' if no argument is provided`
+ENV_CODE="${1:-rca}"   #`:-rca` => defaults to 'rca' if no argument is provided`
                        #1 => first argument passed to the script
 ENV_FILE="$(dirname "$0")/../../.env.${ENV_CODE}"   #${} unecessary, but used for practice
 
@@ -69,12 +69,11 @@ CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4
 USE \`$DB_NAME\`;
 
 -- MIGRATION TRACKING TABLE
---CREATE TABLE IF NOT EXISTS schema_migrations (
---    id INT AUTO_INCREMENT PRIMARY KEY,
---    migration_name VARCHAR(255) NOT NULL UNIQUE,
---    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---    INDEX idx_migration_name (migration_name)
---);
+CREATE TABLE IF NOT EXISTS migrations (
+    migration_id INT AUTO_INCREMENT PRIMARY KEY,
+    migration VARCHAR(255) NOT NULL UNIQUE,
+    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- SHOW CREATED DATABASE INFO
 SELECT 'Database created successfully' as status;
