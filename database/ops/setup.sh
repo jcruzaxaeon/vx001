@@ -1,98 +1,60 @@
 #!/bin/bash
 
-#NOTES
-#   - Filename: setup-database.sh
-#   - Usage: `l$./setup-database.sh {environment code}`
-#   - Environment Codes: rca | test | prod
-#   - rca = local development environment using PC-Name=rca with 
-#       - Windows 11 running MySQL 8.0 Service
-#       - WSL2 (Debian) holding database-source-code, and running backend & frontend
+#SET STRICT MODE
+#   -e (Exit on Error): Exit immediately if a command exits with a non-zero status.
+#   -u (Undefined Variables): Treat unset variables as an error and exit immediately.
+#   -o pipefail: Prevents errors in a pipeline from being masked.
+#      - If any command in a pipeline fails, the entire pipeline fails.
+#      - Without this, only the last command's exit status matters.
+set -euo pipefail
 
-#LOAD ENVIRONMENT VARIABLES 
-#   from `.env.{environment code}` files
+#LOAD ENVIRONMENT VARIABLES
+if [[ ! -f ".env.setup" ]]; then
+    echo "⚠️  Environment file '.env.setup' not found!"
+    exit 1
+fi
+source .env.setup
 
-#VARIABLES
-ENV_CODE="${1:-rca}"   #`:-rca` => defaults to 'rca' if no argument is provided`
-                       #1 => first argument passed to the script
-ENV_FILE="$(dirname "$0")/../../.env.${ENV_CODE}"   #${} unecessary, but used for practice
+echo " Creating database: $DB_NAME"
 
-#FUNCTIONS
-load() {
-    local filename="$1"   #`$1` => the first argument passed to the function
+mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_ADMIN_USER" -p"$DB_ADMIN_PASS" << EOF
 
-    if [ -f "$filename" ]; then
-        echo "📁 Loading environment from: $filename"
-
-        #Export variables from .env file, ignoring comments and empty lines
-        #   - export $(...) - exports KEY=value pairs as local environment variables
-        #   - grep -v '^#' - excludes lines starting with # (comments)
-        #   - grep -v '^$' - excludes empty lines
-        #   - xargs - converts multiple lines into a single line of space-separated KEY=value pairs
-        export $(grep -v '^#' "$filename" | grep -v '^$' | xargs)
-    else
-        echo "⚠️  Environment file '$filename' not found!"
-        echo "Please create it with the required database variables."
-        exit 1
-    fi
-}
-
-load "$ENV_FILE"
-
-#VALIDATION
-vars=("DB_HOST" "DB_PORT" "DB_ROOT_USER" "DB_ROOT_PASS" "DB_NAME" "DB_USER" "DB_USER_PASS" "DB_USER_HOST")
-
-#CHECK IF ALL VARS ARE SET
-#   - "${vars[@]}" - (expands / opens) array
-#   - [@] - all elements as separate (words / arguments)
-#   - -z - checks for empty strings (zero length)
-#   - "${!var}" - returns value $var
-for var in "${vars[@]}"; do
-    if [ -z "${!var}" ]; then
-        echo "❌ Required environment variable '$var' is not set in $ENV_FILE"
-        exit 1
-    fi
-done
-
-#TEST
-#env | grep DB_
-echo "🚀 Initializing database setup for $ENV_CODE environment..."
-echo "🔧 Using database: $DB_NAME on $DB_HOST:$DB_PORT"
-
-#CREATE DATABASE AND USER
-mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_ROOT_USER" -p"$DB_ROOT_PASS" << EOF
-
+--DATABASE
 CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
---CREATE USER IF NOT EXISTS '$DB_USER'@'DB_USER_HOST' IDENTIFIED BY '$DB_USER_PASS';
---GRANT SELECT, INSERT, UPDATE, DELETE ON \`$DB_NAME\`.* TO '$DB_USER'@'DB_USER_HOST';
---FLUSH PRIVILEGES;
+--DEVELOPMENT USER
+--   GRANT PRIVILEGES for
+--      - Data operations
+--      - Schema modifications
+--      - Stored procedures/functions
+--      - Development helpers
+CREATE USER '$DB_DEV_USER'@'$DB_DEV_HOST' IDENTIFIED BY '$DB_DEV_PASS'; 
+GRANT SELECT, INSERT, UPDATE, DELETE ON \`$DB_NAME\`.* TO '$DB_DEV_USER'@'$DB_DEV_HOST';
+GRANT CREATE, DROP, ALTER, INDEX ON \`$DB_NAME\`.* TO '$DB_DEV_USER'@'$DB_DEV_HOST';
+GRANT CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON \`$DB_NAME\`.* TO '$DB_DEV_USER'@'$DB_DEV_HOST';
+GRANT CREATE TEMPORARY TABLES ON \`$DB_NAME\`.* TO '$DB_DEV_USER'@'$DB_DEV_HOST';
+
+--APPLICATION USER
+--   GRANT PRIVILEGES for
+--      - CRUD operations only
+CREATE USER '$DB_APP_USER'@'$DB_APP_HOST' IDENTIFIED BY '$DB_APP_PASS';
+GRANT SELECT, INSERT, UPDATE, DELETE ON \`$DB_NAME\`.* TO '$DB_APP_USER'@'$DB_APP_HOST';
+
+FLUSH PRIVILEGES;
+
 USE \`$DB_NAME\`;
 
--- MIGRATION TRACKING TABLE
+--MIGRATION HISTORY TABLE
 CREATE TABLE IF NOT EXISTS migrations (
     migration_id INT AUTO_INCREMENT PRIMARY KEY,
     migration VARCHAR(255) NOT NULL UNIQUE,
     executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- SHOW CREATED DATABASE INFO
-SELECT 'Database created successfully' as status;
+SHOW DATABASES;
+SELECT User, Host FROM mysql.user;
 SHOW TABLES;
+
 EOF
 
-if [ $? -eq 0 ]; then
-    echo "✅ Database '$DB_NAME' created successfully!"
-    echo "✅ User '$DB_USER' created with full access!"
-    echo "✅ Migration tracking table created!"
-    echo ""
-    echo "🔗 Connection details:"
-    echo "   Host: $DB_HOST:$DB_PORT"
-    echo "   Database: $DB_NAME"
-    echo "   User: $DB_USER"
-else
-    echo "❌ Database initialization failed!"
-    exit 1
-fi
-
-#echo "🌍 Environment: $ENV_NAME"
-#echo "📁 Loading environment variables from: $ENV_FILE"
+echo "✅ Database '$DB_NAME' and user-roles created successfully!"

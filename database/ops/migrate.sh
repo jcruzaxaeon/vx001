@@ -7,11 +7,11 @@ SCRIPT_DIR="$(dirname "$0")"
 MIGRATIONS_DIR="$SCRIPT_DIR/../migrations"
 
 #FUNCTIONS
-load() {
+load_environment_variables() {
     local filename="$1"
 
     if [ -f "$filename" ]; then
-        echo "📁 Loading environment from: $filename"
+        echo "📁 Loading environment variables from: $filename"
         export $(grep -v '^#' "$filename" | grep -v '^$' | xargs)
     else
         echo "⚠️  Environment file '$filename' not found!"
@@ -19,7 +19,7 @@ load() {
         exit 1
     fi
 }
-load "$ENV_FILE"
+load_environment_variables "$ENV_FILE"
 
 #VALIDATION
 vars=("DB_HOST" "DB_PORT" "DB_ROOT_USER" "DB_ROOT_PASS" "DB_NAME" "DB_USER" "DB_USER_PASS" "DB_USER_HOST")
