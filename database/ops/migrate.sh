@@ -54,6 +54,8 @@ run_migration() {
     local migration_name="$2"
     local path_and_filename="$MIGRATIONS_DIR/${migration_name}.${direction}.sql"
 
+    #If direction is down,
+
     if [[ ! -f "$path_and_filename" ]]; then
         echo "❌ Migration file not found: $path_and_filename"
         exit 1
@@ -134,6 +136,20 @@ run_all_pending_migrations() {
 }
 
 #ROLLBACK LATEST DOWN MIGRATION
+rollback_last_migration() {
+    echo "🔍 Finding latest migration to roll back..."
+    
+    local last_migration
+    last_migration=$(mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_DEV_USER" -p"$DB_DEV_PASS" "$DB_NAME" \
+        -sN -e "SELECT migration FROM migrations ORDER BY executed_at DESC LIMIT 1")
+
+    if [[ -z "$last_migration" ]]; then
+        echo "📭 No migrations to roll back"
+        return
+    fi
+    echo "⏪ Rolling back latest migration: $last_migration"
+    run_migration "down" "$last_migration"
+}
 
 show_usage() {
     echo "Usage: $0 [up|down] [migration_name]"
@@ -188,7 +204,7 @@ elif [[ "$ACTION" == "up" ]]; then
     run_all_pending_migrations
 elif [[ "$ACTION" == "down" ]]; then
     # Run latest down migration
-    run_latest_down_migration
+    rollback_last_migration
 fi
 
 echo "🎉 Migration process completed!"

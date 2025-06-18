@@ -82,22 +82,27 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| x | create & test database setup, teardown scripts. sql practice. | 20250612a |
-| x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
+| _ | [feat(db): add rollback](#cm003) | 20250618a |
+| x | [refactor(db): add table-check for migration](#cm002) | 20250618a |
 | x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
-| _ | [refactor(db): add table-check to migrations](#cm002) | 20250618a |
-| _ | [refactor(db): add rollback](#cm003) | 20250618a |
+| x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
+| x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
 ### CM003
 ```
-refactor(db): add rollback
+feat(db): add rollback
 
-- run_latest_rollback()
+- Add `rollback_last_migration()` to `migrate.sh`
+- Remove `rollback/`-directory
+- Keep both up/down migrations in `ops/migrations/` using
+    `*.[direction].sql` suffixes
+
+Reason: SQL practice
 ```
 
 ### CM002
 ```
-refactor(db): add table-check to migrations
+refactor(db): add table-check for migration
 
 This is a complete overhaul of the migration-script.
 
