@@ -27,7 +27,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. Install MySQL Workbench onto Windows 11, including CLI tools?
 1. `root`-user and password should be created during setup-wizard
    - Keep `root`'s `From Host` as `localhost` 
-   - `root` will only be able to connect / login from Windows *ONLY* not from WSL2 or anywhere else, intentionally for security
+   - `root` will only be able to connect / login from Windows *ONLY*, not from WSL2 or anywhere else, intentionally, for security
    - Use `root` only for initialization, and distaster-recovery
 1. Login to MySQL Workbench as `root`, create an `admin`-user who will act like a `root`-user, but with ability to sign-in from non-`localhost` IP addresses (e.g. WSL2).
     - Set "From Host" = {An IP range that includes the WSL2 IP address as seen from (Windows / MySQL Service) }
@@ -37,15 +37,12 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
-- [ ] refactor(db): make root temporary, create roles
-- [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 - [ ] `seed.sh`
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
-- [ ] test git's extended comment option `-m "..." -m "..."` or file upload?
 - [ ] `clean.sh`
 - [ ] `rollback.sh`
 - [ ] `reset.sh`
-- [ ] update migration script: `.my.cnf`, migration_user
+- [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] add validation checks to scripts
 - [ ] decide on local-file backup system.  backup old files.
 - [ ] separate database and user creation in database scripts
@@ -67,6 +64,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] verify users and global priviliges removed
 - [ ] refine tables, columns
 - [ ] review validations
+- [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 
 ### Deployment AR
 - [ ] input validation and error handling
@@ -75,18 +73,51 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] SQL/JS injection prevention
 - [ ] recovery procedures
 
-# Commit History
+### Technical Debt
+- [ ] POSIX-safety?
+    - `migrate.sh`
+
+## Commit History
 [Return to Table of Contents](#table-of-contents)
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
-| _ | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
+| x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
+| _ | [refactor(db): add table-check to migrations](#cm002) | 20250618a |
+| _ | [refactor(db): add rollback](#cm003) | 20250618a |
 
-## CM001
+### CM003
+```
+refactor(db): add rollback
+
+- run_latest_rollback()
+```
+
+### CM002
+```
+refactor(db): add table-check to migrations
+
+This is a complete overhaul of the migration-script.
+
+ORIGINAL: Blindly apply all migrations found in the migrations-folder
+using the `migrate()`-function.
+NEW: Check the migrations table
+
+- Remove `migrate()` from `migrate.sh`
+- Add:
+    - `check_migrations_table()`
+    - `run_migration()`
+    - `run_all_pending_migrations()`
+    - `show_usage()`
+- Test only a single migration: `0001_create_users_table`
+
+Reason: SQL practice
+```
+
+### CM001
 Commit message 1. Testing the Conventional Commit format.
-
 ```
 refactor(db): make admin temporary, create roles
 

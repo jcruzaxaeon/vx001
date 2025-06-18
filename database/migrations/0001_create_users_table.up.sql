@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Record this migration
+-- Record migration
 INSERT INTO migrations (migration) VALUES ('0001_create_users_table');

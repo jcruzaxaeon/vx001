@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#Requires `.env.setup` file to be present in the same directory
+
 #SET STRICT MODE
 #   -e (Exit on Error): Exit immediately if a command exits with a non-zero status.
 #   -u (Undefined Variables): Treat unset variables as an error and exit immediately.

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+#Requires `.env.setup` file to be present in the same directory
+
 #LOAD ENVIRONMENT VARIABLES
 if [[ ! -f ".env.setup" ]]; then
     echo "⚠️  Environment file '.env.setup' not found!"
