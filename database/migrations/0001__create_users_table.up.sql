@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Record migration
-INSERT INTO migrations (migration) VALUES ('0001_create_users_table');
+INSERT INTO migrations (migration) VALUES ('0001__create_users_table');

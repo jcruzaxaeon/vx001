@@ -37,7 +37,9 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
+- [ ] refactor(db): normalize migration filenames
 - [ ] fix(db): force migrations to occur in ascending order
+- [ ] docs(refactor): standardize commit table entires
 - [ ] `seed.sh`
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
 - [ ] `clean.sh`
@@ -90,6 +92,15 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM0005
+```
+refactor(db): normalize migration filenames
+
+- Start using a double-underscore after the numeric-prefix
+in migration filenames instead of a single-underscore.
+- Change filenames and code accordingly
+```
+
 ### CM004
 ```
 feat(db): create nodes table. M0002
@@ -97,7 +108,6 @@ feat(db): create nodes table. M0002
 - Create files:
     - `0002__create_nodes_table.up.sql`
     - `0002__create_nodes_table.down.sql`
-
 - Manually test that multiple migrations work as expected:
     - Migrate up from migration 0 to 2
     - Rollback from 2 to 0
@@ -138,7 +148,7 @@ NEW: Check the migrations table
     - `run_migration()`
     - `run_all_pending_migrations()`
     - `show_usage()`
-- Test only a single migration: `0001_create_users_table`
+- Test only a single migration: `0001__create_users_table`
 
 Reason: SQL practice
 ```
