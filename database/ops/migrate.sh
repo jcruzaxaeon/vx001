@@ -111,7 +111,7 @@ run_all_pending_migrations() {
         return
     fi
 
-    #BREAKDOWN:
+    #Breakdown:
     #    - `basename [pathname] [sufix]`: strip path and suffix from pathname
     for pathname in "${migration_files[@]}"; do
         local stem
@@ -140,8 +140,13 @@ rollback_last_migration() {
     echo "🔍 Finding latest migration to roll back..."
     
     local last_migration
+    # last_migration=$(mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_DEV_USER" -p"$DB_DEV_PASS" "$DB_NAME" \
+    #     -sN -e "SELECT migration FROM migrations ORDER BY executed_at DESC LIMIT 1")
+    # last_migration=$(mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_DEV_USER" -p"$DB_DEV_PASS" "$DB_NAME" \
+    #     -sN -e "SELECT migration FROM migrations ORDER BY executed_at DESC, migration DESC LIMIT 1")
     last_migration=$(mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_DEV_USER" -p"$DB_DEV_PASS" "$DB_NAME" \
-        -sN -e "SELECT migration FROM migrations ORDER BY executed_at DESC LIMIT 1")
+        -sN -e "SELECT migration FROM migrations ORDER BY CAST(SUBSTRING_INDEX(migration, '_', 1) \
+        AS UNSIGNED) DESC LIMIT 1")
 
     if [[ -z "$last_migration" ]]; then
         echo "📭 No migrations to roll back"

@@ -37,6 +37,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
+- [ ] fix(db): force migrations to occur in ascending order
 - [ ] `seed.sh`
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
 - [ ] `clean.sh`
@@ -82,11 +83,32 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| _ | [feat(db): add rollback](#cm003) | 20250618a |
+| x | [feat(db): create nodes table. M0002](#cm004) | 20250619a |
+| x | [feat(db): add rollback](#cm003) | 20250618a |
 | x | [refactor(db): add table-check for migration](#cm002) | 20250618a |
 | x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
+
+### CM004
+```
+feat(db): create nodes table. M0002
+
+- Create files:
+    - `0002__create_nodes_table.up.sql`
+    - `0002__create_nodes_table.down.sql`
+
+- Manually test that multiple migrations work as expected:
+    - Migrate up from migration 0 to 2
+    - Rollback from 2 to 0
+    - Migrate up to 2 again
+
+Fix: Selecting last migration via executed_at(TIMESTAMP) was not
+    deterministic.  Switched to selecting last migration using file
+    prefixes.
+
+Reason: SQL practice
+```
 
 ### CM003
 ```
