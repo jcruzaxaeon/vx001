@@ -37,8 +37,6 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
-- [ ] refactor(db): normalize migration filenames
-- [ ] fix(db): force migrations to occur in ascending order
 - [ ] docs(refactor): standardize commit table entires
 - [ ] `seed.sh`
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
@@ -85,12 +83,26 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
+| x | [fix(db): run migrations in ascending order](#cm0006) | 20250619c |
+| x | [refactor(db): normalize migration filenames](#cm0005) | 20250619b |
 | x | [feat(db): create nodes table. M0002](#cm004) | 20250619a |
 | x | [feat(db): add rollback](#cm003) | 20250618a |
 | x | [refactor(db): add table-check for migration](#cm002) | 20250618a |
 | x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
+
+### CM0006
+```
+fix(db): run migrations in ascending order
+
+- Migrations are currently running non-deterministically
+- Use migration filename prefixes to order migrations
+
+Also:
+docs(readme): correct commit history table
+- add previous commit title to commit history table
+```
 
 ### CM0005
 ```

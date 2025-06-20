@@ -93,9 +93,11 @@ run_all_pending_migrations() {
 
     #Breakdown:
     #    - `find [directory] [options]`: searches for files in the specified directory
+    #        - `-print0`: output filenames terminated by a null character (`\0`) instead of newline
     #    - `-name "*.up.sql"`: only include files whose name ends with `.up.sql`
     #    - `-type f`: only include files (not directories)
     #    - `| sort`: pipe list of pathnames to `sort` (ascending lexicographical order)
+    #        - `-z`: use null character (`\0`) as delimiter (instead of newline)
     #    - `<(...)`: process substitution; run (...) in a subshell, and redirect output as if it were a file
     #        - e.g.     <(...)       ~=       "find-sort-output_temp.txt"
     #        - holds a list of pathnames for all migration files in a temporary file
@@ -104,7 +106,15 @@ run_all_pending_migrations() {
     #        - `input`: standard input, input stream, file, or process-substitution output
     #        - `var`: array-variable
     #    - `-t`: remove trailing newlines from each line of input
-    mapfile -t migration_files < <(find "$MIGRATIONS_DIR" -name "*.up.sql" -type f | sort)
+    #    - `xargs`: takes standard input and builds command lines arguments out of that input
+    #        - `-0`: expect input items to be delimited by a null character
+    #        - `-n1`: use one argument per command line
+    # mapfile -t migration_files < <(find "$MIGRATIONS_DIR" -name "*.up.sql" -type f | sort)
+    mapfile -t migration_files < <(
+        find "$MIGRATIONS_DIR" -type f -name "*.up.sql" -print0 \
+            | sort -z \
+            | xargs -0 -n1
+    )
 
     if [[ ${#migration_files[@]} -eq 0 ]]; then
         echo "📭 No migration files found in $MIGRATIONS_DIR"
