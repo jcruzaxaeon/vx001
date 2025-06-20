@@ -37,12 +37,12 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
+- [ ] refactor(db): move seed-clean logic into seed file
 - [ ] docs(refactor): standardize commit table entires
-- [ ] `seed.sh`
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
-- [ ] `clean.sh`
-- [ ] `rollback.sh`
-- [ ] `reset.sh`
+- [ ] `backukp.sh`
+- [ ] `restore.sh`
+- [ ] `reset.sh`? option in seed file
 - [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] add validation checks to scripts
 - [ ] decide on local-file backup system.  backup old files.
@@ -51,8 +51,6 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] create, test node table migration script. sql practice.
 - [ ] seed database
 - [ ] practice JOINs and QUERYs? how?
-- [ ] `backukp.sh`
-- [ ] `restore.sh`
 - [ ] constraints and validation
 - [ ] indexing
 - [ ] triggers?
@@ -83,6 +81,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
+| x | [feat(db): implement seed files](#cm0007) | 20250620a |
 | x | [fix(db): run migrations in ascending order](#cm0006) | 20250619c |
 | x | [refactor(db): normalize migration filenames](#cm0005) | 20250619b |
 | x | [feat(db): create nodes table. M0002](#cm004) | 20250619a |
@@ -91,6 +90,20 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
+
+### CM0007
+```
+feat(db): implement seed files
+
+- Create files:
+    - `001__users.seed.sql`
+    - `002__nodes.seed.sql`
+    - `clean.sql`
+    - `seed.sh`
+- Test seed, clean, seed sequence
+
+Reason: SQL practice
+```
 
 ### CM0006
 ```

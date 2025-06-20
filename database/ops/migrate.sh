@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# ./database/ops/migrate.sh
 set -euo pipefail
 
 
