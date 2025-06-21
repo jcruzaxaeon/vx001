@@ -38,11 +38,13 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 # SKAR (Action Roster)
 - [ ] refactor(db): move seed-clean logic into seed file
+- [ ] feat(db): implement metadata for db backups
 - [ ] docs(refactor): standardize commit table entires
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
 - [ ] `backukp.sh`
 - [ ] `restore.sh`
 - [ ] `reset.sh`? option in seed file
+- [ ] minimize db GRANTs for DEV
 - [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] add validation checks to scripts
 - [ ] decide on local-file backup system.  backup old files.
@@ -81,9 +83,11 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| x | [feat(db): implement seed files](#cm0007) | 20250620a |
-| x | [fix(db): run migrations in ascending order](#cm0006) | 20250619c |
-| x | [refactor(db): normalize migration filenames](#cm0005) | 20250619b |
+| _ | [feat(db): review extras in data.sh](#cm009) | 20250621a |
+| x | [feat(db): implement db backup and restore](#cm008) | 20250620a |
+| x | [feat(db): implement seed files](#cm007) | 20250620a |
+| x | [fix(db): run migrations in ascending order](#cm006) | 20250619c |
+| x | [refactor(db): normalize migration filenames](#cm005) | 20250619b |
 | x | [feat(db): create nodes table. M0002](#cm004) | 20250619a |
 | x | [feat(db): add rollback](#cm003) | 20250618a |
 | x | [refactor(db): add table-check for migration](#cm002) | 20250618a |
@@ -91,7 +95,43 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
-### CM0007
+### CM009
+```
+feat(db): review extras in data.sh
+
+`data.sh` is a data-management script that was to handle backup and
+and restore.  It was vibe-coded with Claude AI which included many
+unexpected, useful, yet buggy features.  Most extra features were
+ignored in last commit.  This commit is to continue reviewing/fixing
+those extra features/bugs.
+```
+
+### CM008
+```
+feat(db): implement db backup and restore
+
+Automated backup and restore only works with a single file: bak.sql
+- Backup appends information to `backup.log`
+- Backup creates `./database/backups/metadata/`DATE_TIME.json`
+- Backup creates a `bak_DATE_TIME.sql` file along with a copy
+    that overwrites `bak.sql`
+- Restore *ONLY* looks at `bak.sql`, and does *NOT* access log nor
+    metadata
+
+Notes:
+- `data.sh` vibe-coded with Claude AI, but too many extra features
+    were implemented at once introducing too many bugs
+- Commented out or not using many extra features to keep debugging
+    simple and focused on just a basic backup/restore
+
+Also:
+docs(readme): normalize number of digits in commit history numbers
+
+vibe-coded-with: Claude
+reason: SQL practice
+```
+
+### CM007
 ```
 feat(db): implement seed files
 
@@ -105,7 +145,7 @@ feat(db): implement seed files
 Reason: SQL practice
 ```
 
-### CM0006
+### CM006
 ```
 fix(db): run migrations in ascending order
 
@@ -117,7 +157,7 @@ docs(readme): correct commit history table
 - add previous commit title to commit history table
 ```
 
-### CM0005
+### CM005
 ```
 refactor(db): normalize migration filenames
 
