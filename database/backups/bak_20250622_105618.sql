@@ -67,7 +67,7 @@ CREATE TABLE `nodes` (
   PRIMARY KEY (`node_id`),
   UNIQUE KEY `name_canonical` (`name_canonical`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,8 +82,7 @@ INSERT INTO `nodes` VALUES
 (3,'Shared Folder','shared folder','shared-folder','folder','{\"permission\": \"read-only\"}','shared','2025-06-21 00:03:20',3,'2025-06-21 00:03:20',1,1),
 (4,'Notebook Entry','notebook entry','notebook-entry','notebook','{\"color\": \"blue\", \"pages\": 5}','public','2025-06-21 00:03:20',1,'2025-06-21 00:03:20',3,1),
 (5,'Home','Home (Song)','home__song','country song',NULL,'public','2025-06-21 00:08:01',1,'2025-06-21 19:44:59',NULL,1),
-(6,'Victoria','Victoria (Song)','victoria__song','off beat song',NULL,'public','2025-06-22 17:52:03',1,'2025-06-22 17:52:03',NULL,1),
-(7,'Immersion','Immersion (Song)','immersion__song','bent',NULL,'public','2025-06-23 23:07:21',1,'2025-06-23 23:07:21',NULL,1);
+(6,'Victoria','Victoria (Song)','victoria__song','off beat song',NULL,'public','2025-06-22 17:52:03',1,'2025-06-22 17:52:03',NULL,1);
 /*!40000 ALTER TABLE `nodes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,4 +142,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-23 16:07:36
+-- Dump completed on 2025-06-22 10:56:18

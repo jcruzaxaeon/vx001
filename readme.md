@@ -7,6 +7,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. [SKAR](#skar-action-roster)
 1. [Database](#database)
 1. [Commit History](#commit-history)
+1. [Testing]
 
 ## Stack
 | Type | Choice | Comment |
@@ -37,15 +38,18 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
+- [ ] feat(db): test --force, -f
+- [ ] refactor(db): review DB_DEV_USER privileges
+    - [ ] minimize db GRANTs for DB_DEV_USER
 - [ ] refactor(db): move seed-clean logic into seed file
 - [ ] feat(db): implement metadata for db backups
+- [ ] feat(db): test `cleanup` and `KEEP_DAYS`
 - [ ] docs(refactor): standardize commit table entires
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
-- [ ] `backukp.sh`
-- [ ] `restore.sh`
 - [ ] `reset.sh`? option in seed file
-- [ ] minimize db GRANTs for DEV
 - [ ] update migration script: `.my.cnf`, migration_user?
+- [ ] create `utils.sh` for common functions
+    - See "[MOVE] Move to `utils.sh`"
 - [ ] add validation checks to scripts
 - [ ] decide on local-file backup system.  backup old files.
 - [ ] separate database and user creation in database scripts
@@ -67,6 +71,11 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] review validations
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 
+### Low Priority
+- [ ] feat(db-backup): show available backups
+- [ ] feat(db-backup): make --tag, -t option
+- [ ] feat(db-backup): allow -f option
+
 ### Deployment AR
 - [ ] input validation and error handling
 - [ ] credential security best practices
@@ -83,7 +92,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| _ | [feat(db): review extras in data.sh](#cm009) | 20250621a |
+| _ | [feat(db): review extras in data.sh, rev-b](#cm009) | 20250623a |
 | x | [feat(db): implement db backup and restore](#cm008) | 20250620a |
 | x | [feat(db): implement seed files](#cm007) | 20250620a |
 | x | [fix(db): run migrations in ascending order](#cm006) | 20250619c |
@@ -97,13 +106,20 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 ### CM009
 ```
-feat(db): review extras in data.sh
+feat(db): review extras in data.sh, rev-b
 
 `data.sh` is a data-management script that was to handle backup and
 and restore.  It was vibe-coded with Claude AI which included many
 unexpected, useful, yet buggy features.  Most extra features were
-ignored in last commit.  This commit is to continue reviewing/fixing
-those extra features/bugs.
+ignored and untested in last commit.  This commit is for continuing
+review and fixing bugs.
+
+- Reviewed / repaired `[REV-B]` sections
+- Replace `create_backup_directory()` with inline, idempotent 
+    `mkdir -p` in `create_backup()`
+
+vibe-coded-with: Claude
+reason: SQL, Bash practice
 ```
 
 ### CM008
@@ -231,3 +247,8 @@ Test database reset.
 
 Reason: SQL practice
 ```
+
+## Testing
+
+### Database Testing Notes
+- [ ] `--force`, `-f` on `restore`

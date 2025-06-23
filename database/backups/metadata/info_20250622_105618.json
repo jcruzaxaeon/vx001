@@ -1,0 +1,13 @@
+    {
+        "timestamp": "20250622_105618",
+        "date": "20250622",
+        "database": "dbvx1",
+        "host": "172.18.80.1",
+        "port": "3306",
+        "user": "dev",
+        "description": "",
+        "file_size": "6738",
+        "tables_count": "3",
+        "created_by": "jcruz",
+        "hostname": "rca"
+    }
