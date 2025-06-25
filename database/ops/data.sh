@@ -30,12 +30,13 @@ load_environment_variables() {
     local filename="$1"
 
     if [ -f "$filename" ]; then
-        echo "📁 Loading environment variables from: $filename"
+        # [x] [REV-C] Remove
+        # echo "📁 Loading environment variables from: $filename"
         set -o allexport
         source "$filename"
         set +o allexport
     else
-        echo "⚠️  Environment file '$filename' not found!"
+        echo "⚠️  Environment variable file not found!"
         exit 1
     fi
 }
@@ -225,7 +226,7 @@ EOF
 
 }
 
-# [ ] [REV-B] Keep - Fixed and synced with create_backup()
+# [x] [REV-B] Keep - Fixed and synced with create_backup()
 restore_backup() {
     # Usage: {$0 [ACTION] [OPTION/"ARG2"]} // {$0 restore [NULL|date]}
     # Examples: {$0 restore} // {$0 restore 2024-12-25}
@@ -242,7 +243,7 @@ restore_backup() {
         # info_pathname=$(ls "$info_dir"/info_*.json 2>/dev/null | sort | tail -1)
         info_pathname="$info_dir/info.json"
     else
-        echo "🔍 Looking for backup from date: $backup_date"
+        echo -e "\n🔍 Looking for backup from date: $backup_date"
         # Convert YYYY-MM-DD to YYYYMMDD format to match create_backup() naming
         local timestamp_format=$(echo "$backup_date" | tr -d '-')
         
@@ -262,6 +263,7 @@ restore_backup() {
             echo "✅ Found backup: $backup_pathname"
         else
             echo "❌ No backup found for date: $backup_date"
+            list_backups
             exit 1
         fi
 
@@ -338,79 +340,102 @@ restore_backup() {
     fi
 }
 
-# [ ] [REV-X]
+# [x] [REV-C] Keep. Reviewed and tested manually.
 list_backups() {
-    echo "📋 Available backups:"
-    
+    # [LEARN] [-d "$VAR"] - Order of operations?
+    # - `-d` => [Does VAR exist?] && [Is VAR a directory?]
     if [ ! -d "$BACKUP_BASE_DIR" ]; then
-        echo "❌ No backups directory found: $BACKUP_BASE_DIR"
+        echo "❌ Backups directory not found: $BACKUP_BASE_DIR"
         return 1
     fi
     
     local found_backups=false
-    for backup_dir in "$BACKUP_BASE_DIR"/*/; do
-        if [ -d "$backup_dir" ] && [ -f "$backup_dir/database_backup.sql" ]; then
+    echo -e "\n📋 Checking for available backups:"
+
+    # Find all bak*.sql files in the backup directory
+    for backup_file in "$BACKUP_BASE_DIR"/bak*.sql; do
+        # Check if the glob matched any files (handle case where no files match)
+        if [ -f "$backup_file" ]; then
             found_backups=true
-            local basename=$(basename "$backup_dir")
-            local info_file="$backup_dir/backup_info.json"
-            local size="$(du -h "$backup_dir/database_backup.sql" 2>/dev/null | cut -f1 || echo 'unknown')"
+            local basename=$(basename "$backup_file")
+            local size="$(du -h "$backup_file" 2>/dev/null | cut -f1 || echo 'unknown')"
             
-            echo "  📁 $basename (Size: $size)"
+            echo "  📄 $basename (Size: $size)"
             
-            if [ -f "$info_file" ]; then
-                local description=$(grep '"description"' "$info_file" | cut -d'"' -f4)
-                local timestamp=$(grep '"timestamp"' "$info_file" | cut -d'"' -f4)
-                [ -n "$description" ] && echo "     📝 $description"
-                [ -n "$timestamp" ] && echo "     🕒 $timestamp"
+            # Extract YYYYMMDD_HHMMSS pattern from filename
+            local timestamp_pattern=$(echo "$basename" | grep -o '[0-9]\{8\}_[0-9]\{6\}')
+            
+            # Look for corresponding info file in metadata subdirectory
+            if [ -n "$timestamp_pattern" ]; then
+                local info_file="$BACKUP_BASE_DIR/metadata/info_${timestamp_pattern}.json"
+                if [ -f "$info_file" ]; then
+                    local description=$(grep '"description"' "$info_file" | cut -d'"' -f4)
+                    [ -n "$description" ] && echo "     📝 $description"
+                fi
             fi
         fi
     done
     
+    echo ""
+
     if [ "$found_backups" = false ]; then
-        echo "❌ No backups found in: $BACKUP_BASE_DIR"
+        echo -e "\n❌ No backups found in: $BACKUP_BASE_DIR\n"
         return 1
-    fi
-    
-    # Show latest link
-    if [ -L "$BACKUP_BASE_DIR/latest" ]; then
-        echo ""
-        echo "🔗 latest -> $(readlink "$BACKUP_BASE_DIR/latest")"
     fi
 }
 
-# [ ] [REV-X]
+# [x] [REV-C] Keep
 show_backup_info() {
-    local backup_date="${1:-latest}"
-    local backup_dir
+    local backup_date="${1:-latest}"   # backup_date format: YYYY-MM-DD
+    local search_date                  # search_date format: YYYYMMDD
+    local backup_pathname
+    local info_pathname
     
     if [ "$backup_date" = "latest" ]; then
-        backup_dir="$BACKUP_BASE_DIR/latest"
-        if [ ! -L "$backup_dir" ]; then
-            echo "❌ No latest backup found"
-            exit 1
-        fi
-        backup_dir="$BACKUP_BASE_DIR/$(readlink "$backup_dir")"
+        backup_pathname="$BACKUP_BASE_DIR/bak.sql"
+        info_pathname="$BACKUP_BASE_DIR/metadata/info.json"
     else
-        backup_dir="$BACKUP_BASE_DIR/$backup_date"
+        search_date=$(echo "$backup_date" | tr -d '-')
+        backup_pathname=$(find "$BACKUP_BASE_DIR" -maxdepth 1 \
+            -name "bak_${search_date}_*.sql" -type f \
+            2>/dev/null \
+            | sort -t_ -k3 -r \
+            | head -1 \
+        )
+        # backup_pathname="$BACKUP_BASE_DIR/bak_$backup_date*.sql"   # format: bak_YYYYMMDD_HHMMSS.sql
+        if [ -n "$backup_pathname" ]; then
+            local full_timestamp=$(basename "$backup_pathname" \
+                | grep -o '[0-9]\{8\}_[0-9]\{6\}'
+            )
+            info_pathname="$BACKUP_BASE_DIR/metadata/info_${full_timestamp}.json"   ## format: info_YYYYMMDD_HHMMSS.json
+        else
+            backup_pathname=""
+            info_pathname=""
+        fi
     fi
-    
-    local info_file="$backup_dir/backup_info.json"
-    
-    if [ ! -f "$info_file" ]; then
-        echo "❌ Backup info not found: $info_file"
+
+    if [ -z "$backup_pathname" ] || [ ! -f "$backup_pathname" ]; then
+        echo "❌ No backup found for: $backup_date"
         exit 1
     fi
     
-    echo "📊 Backup Information:"
-    echo "📁 Location: $backup_dir"
-    echo ""
+    if [ -z "$info_pathname" ] || [ ! -f "$info_pathname" ]; then
+        echo "❌ No info file found for: $backup_date"
+        exit 1
+    fi
+    
+    echo -e "\n📊 Backup Information for: $backup_date"
+    echo "📁 Backup: $(basename "$backup_pathname")"
+    echo "📄 Info: $(basename "$info_pathname")"
     
     # Pretty print JSON
     if command -v jq >/dev/null 2>&1; then
-        jq . "$info_file"
+        jq . "$info_pathname"
     else
-        cat "$info_file"
+        cat "$info_pathname"
     fi
+
+    echo ""
 }
 
 # [ ] [REV-X]
@@ -519,7 +544,9 @@ cleanup_old_backups() {
     echo "✅ Cleanup completed. Deleted $deleted_count old backups."
 }
 
-# [ ] [REV-X]
+# [ ] [REV-X] !mark
+# [ ] add support for date-option in `info [date]`.  currently only shows latest backup info.
+# echo "  info [date]            Show backup information (default: latest)"
 show_usage() {
     echo "Usage: $0 [ACTION] [OPTIONS]"
     echo ""

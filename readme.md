@@ -38,6 +38,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
 # SKAR (Action Roster)
+- [ ] fead(db): add comprehensive error handling and input validation
 - [ ] feat(db): test --force, -f
 - [ ] refactor(db): review DB_DEV_USER privileges
     - [ ] minimize db GRANTs for DB_DEV_USER
@@ -92,7 +93,9 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| _ | [feat(db): review extras in data.sh, rev-b](#cm009) | 20250623a |
+| _ | [feat(db): review extras in data.sh, rec-d](#cm011) | 20250625a |
+| _ | [feat(db): review extras in data.sh, rev-c](#cm010) | 20250624a |
+| x | [feat(db): review extras in data.sh, rev-b](#cm009) | 20250623a |
 | x | [feat(db): implement db backup and restore](#cm008) | 20250620a |
 | x | [feat(db): implement seed files](#cm007) | 20250620a |
 | x | [fix(db): run migrations in ascending order](#cm006) | 20250619c |
@@ -104,17 +107,41 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM011
+```
+feat(db): review extras in data.sh, rev-d
+
+- Review / Repair `[REV-D]` sections
+- [ ] verify_backup()
+- [ ] cleanup_old_backups()
+- [ ] show_usage()
+
+vibe-coded-with: Claude
+reason: SQL, Bash practice
+```
+
+### CM010
+```
+feat(db): review extras in data.sh, rev-c
+
+- Fixed list_backups(), show_backup_info()
+- Review / repair `[REV-C]` sections
+
+vibe-coded-with: Claude
+reason: SQL, Bash practice
+```
+
 ### CM009
 ```
 feat(db): review extras in data.sh, rev-b
 
-`data.sh` is a data-management script that was to handle backup and
-and restore.  It was vibe-coded with Claude AI which included many
-unexpected, useful, yet buggy features.  Most extra features were
-ignored and untested in last commit.  This commit is for continuing
-review and fixing bugs.
+`data.sh` (data-management script) handles backup and
+and restore, and was originally vibe-coded with Claude AI which
+included many unexpected, useful, yet buggy features.  Most extra
+features were ignored and untested in last commit.  This commit
+continues review and bug fixes.
 
-- Reviewed / repaired `[REV-B]` sections
+- Review / repair `[REV-B]` sections
 - Replace `create_backup_directory()` with inline, idempotent 
     `mkdir -p` in `create_backup()`
 

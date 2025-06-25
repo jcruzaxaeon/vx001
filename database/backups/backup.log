@@ -23,3 +23,10 @@
 [2025-06-23 16:18:09] Restore failed
 [2025-06-23 16:19:25] Starting restore for database: dbvx1 from ./../backups/bak.sql
 [2025-06-23 16:19:25] Restore completed successfully
+[2025-06-24 15:13:30] Starting backup for database: dbvx1
+[2025-06-24 15:15:42] Starting restore for database: dbvx1 from ./../backups/bak_20250624_151330.sql
+[2025-06-24 15:15:42] Restore completed successfully
+[2025-06-24 15:28:38] Starting restore for database: dbvx1 from ./../backups/bak_20250623_160736.sql
+[2025-06-24 15:28:38] Restore completed successfully
+[2025-06-24 15:28:54] Starting restore for database: dbvx1 from ./../backups/bak.sql
+[2025-06-24 15:28:55] Restore completed successfully

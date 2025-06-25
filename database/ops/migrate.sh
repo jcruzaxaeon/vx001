@@ -6,9 +6,6 @@ set -euo pipefail
 
 
 #VARIABLES
-#
-#
-#
 SCRIPT_DIR="$(dirname "$0")"
 MIGRATIONS_DIR="$SCRIPT_DIR/../migrations"
 ACTION="${1:-up}"  #`1:` = First argument. `-up` = Default: 'up'
@@ -18,9 +15,6 @@ ENV_DIR="$SCRIPT_DIR/../../.env"
 
 
 #FUNCTIONS
-#
-#
-#
 load_environment_variables() {
     local filename="$1"
 
@@ -182,9 +176,6 @@ show_usage() {
 
 
 # MAIN SCRIPT
-#
-#
-#
 load_environment_variables "$ENV_DIR"
 validate_environment_variables
 if [[ -n "$MIGRATION_NAME" ]]; then
