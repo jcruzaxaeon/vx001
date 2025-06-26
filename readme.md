@@ -46,10 +46,9 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] refactor(db): review DB_DEV_USER privileges
     - [ ] minimize db GRANTs for DB_DEV_USER
 - [ ] refactor(db): move seed-clean logic into seed file
-- [ ] feat(db): implement metadata for db backups
-- [ ] feat(db): test `cleanup` and `KEEP_DAYS`
 - [ ] docs(refactor): standardize commit table entires
 - [ ] create a test / unit-test? to verify proper db and seed-data creation
+- [ ] refactor(db): cleanup comments
 - [ ] `reset.sh`? option in seed file
 - [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] create `utils.sh` for common functions
@@ -81,6 +80,8 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | Low | Later | feat(db-backup): show available backups | |
 | Low | Later | feat(db-backup): make --tag, -t option | |
 | Low | Later | feat(db-backup): allow -f option | |
+| Low | Later | refactor(db): show_usage() | |
+| Low | Later | feat(db-backup): test --force, -f | |
 
 ### Deployment AR
 - [ ] input validation and error handling
@@ -98,7 +99,8 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(db): review extras in data.sh, rev-e](#cm012) | 20250625b |
+| - | [feat(api): bootstrap api](#cm013) | 20250626b |
+| x | [feat(db): review clean old backups function](#cm012) | 20250626a |
 | x | [feat(db): review extras in data.sh, rev-d](#cm011) | 20250625a |
 | x | [feat(db): review extras in data.sh, rev-c](#cm010) | 20250624a |
 | x | [feat(db): review extras in data.sh, rev-b](#cm009) | 20250623a |
@@ -113,13 +115,17 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM013
+```
+feat(api): bootsrap api
+```
+
 ### CM012
 ```
-feat(db): review extras in data.sh, rev-e
+feat(db): review clean old backups function
 
-- Review / Repair `[REV-E]` sections
-- [ ] cleanup_old_backups()
-- [ ] show_usage()
+- Review / Repair `[REV-E]` section(s)
+- [x] cleanup_old_backups()
 
 vibe-coded-with: Claude
 reason: SQL, Bash practice

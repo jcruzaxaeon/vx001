@@ -20,7 +20,7 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 DATE_ONLY=$(date +"%Y%m%d")
 
 # [ ] [TEST]
-KEEP_DAYS="${BACKUP_KEEP_DAYS:-2}"
+KEEP_DAYS="${BACKUP_KEEP_DAYS:-7}"
 
 # FUNCTIONS
 
@@ -471,7 +471,7 @@ inspect_backup_file() {
         # backup_dir="$BACKUP_BASE_DIR/$backup_date"
     fi
 
-    if [ -n "$backup_pathname" ] && [ -f "$backup_pathname" ]; then #!mark
+    if [ -n "$backup_pathname" ] && [ -f "$backup_pathname" ]; then
         echo "✅ Found backup: $backup_pathname"
     else
         echo "❌ No backup found for date: $backup_date"
@@ -528,7 +528,9 @@ inspect_backup_file() {
     echo "✅ Backup verification completed. See: $verify_log"
 }
 
-# [ ] [REV-X]
+
+
+# [x] [REV-E] Keep.
 cleanup_old_backups() {
     echo "🧹 Cleaning up backups older than $KEEP_DAYS days..."
     
@@ -537,37 +539,26 @@ cleanup_old_backups() {
     local deleted_count=0
     local cutoff_date=$(date -d "$KEEP_DAYS days ago" +%Y-%m-%d 2>/dev/null || date -v-${KEEP_DAYS}d +%Y-%m-%d 2>/dev/null)
     
-    for backup_dir in "$BACKUP_BASE_DIR"/*/; do
-        if [ -d "$backup_dir" ]; then
-            local basename=$(basename "$backup_dir")
-            
-            # Skip if not a date directory
-            if [[ ! "$basename" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-                continue
-            fi
+    for backup_file in "$BACKUP_BASE_DIR"/bak_*.sql; do
+        if [ -f "$backup_file" ]; then
+            local basename=$(basename "$backup_file")
+            local date_str="${basename#bak_}"
+            date_str="${date_str%%_*}"
+            local formatted_date=$(date -d "${date_str:0:4}-${date_str:4:2}-${date_str:6:2}" +"%Y-%m-%d")
             
             # Compare dates
-            if [[ "$basename" < "$cutoff_date" ]]; then
-                echo "🗑️  Deleting old backup: $basename"
-                rm -rf "$backup_dir"
-                ((deleted_count++))
+            if [[ "$formatted_date" < "$cutoff_date" ]]; then
+                echo "🗑️  Deleting old backup: $backup_file"
+                rm -f "$backup_file"
+                deleted_count=$((deleted_count + 1))
             fi
         fi
     done
     
-    # Update latest symlink if it's broken
-    if [ -L "$BACKUP_BASE_DIR/latest" ] && [ ! -d "$BACKUP_BASE_DIR/latest" ]; then
-        rm "$BACKUP_BASE_DIR/latest"
-        # Find the newest backup and link to it
-        local newest=$(ls -1 "$BACKUP_BASE_DIR" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)
-        if [ -n "$newest" ]; then
-            ln -sf "$newest" "$BACKUP_BASE_DIR/latest"
-            echo "🔗 Updated latest link to: $newest"
-        fi
-    fi
-    
     echo "✅ Cleanup completed. Deleted $deleted_count old backups."
 }
+
+
 
 # [ ] [REV-X] !mark
 show_usage() {
