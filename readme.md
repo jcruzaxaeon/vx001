@@ -8,6 +8,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. [Database](#database)
 1. [Commit History](#commit-history)
 1. [Testing]
+1. [Notes](#notes)
 
 ## Stack
 | Type | Choice | Comment |
@@ -37,7 +38,9 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 1. Ensure that `dev` and `app` passwords are properly set in `vx001/.env`
 1. `admin`-user should not be needed any more.  You can delete `.env.init`.
 
-# SKAR (Action Roster)
+## SKAR (Action Roster)
+
+### Raw AR
 - [ ] fead(db): add comprehensive error handling and input validation
 - [ ] feat(db): test --force, -f
 - [ ] refactor(db): review DB_DEV_USER privileges
@@ -72,10 +75,12 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 - [ ] review validations
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 
-### Low Priority
-- [ ] feat(db-backup): show available backups
-- [ ] feat(db-backup): make --tag, -t option
-- [ ] feat(db-backup): allow -f option
+| Priority | Timeline | Item | Description |
+| - | - | - | - |
+| High | Later | feat(db): automate a full test-restore | checksum, queries |
+| Low | Later | feat(db-backup): show available backups | |
+| Low | Later | feat(db-backup): make --tag, -t option | |
+| Low | Later | feat(db-backup): allow -f option | |
 
 ### Deployment AR
 - [ ] input validation and error handling
@@ -93,8 +98,9 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| _ | [feat(db): review extras in data.sh, rec-d](#cm011) | 20250625a |
-| _ | [feat(db): review extras in data.sh, rev-c](#cm010) | 20250624a |
+| - | [feat(db): review extras in data.sh, rev-e](#cm012) | 20250625b |
+| x | [feat(db): review extras in data.sh, rev-d](#cm011) | 20250625a |
+| x | [feat(db): review extras in data.sh, rev-c](#cm010) | 20250624a |
 | x | [feat(db): review extras in data.sh, rev-b](#cm009) | 20250623a |
 | x | [feat(db): implement db backup and restore](#cm008) | 20250620a |
 | x | [feat(db): implement seed files](#cm007) | 20250620a |
@@ -107,14 +113,24 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM012
+```
+feat(db): review extras in data.sh, rev-e
+
+- Review / Repair `[REV-E]` sections
+- [ ] cleanup_old_backups()
+- [ ] show_usage()
+
+vibe-coded-with: Claude
+reason: SQL, Bash practice
+```
+
 ### CM011
 ```
 feat(db): review extras in data.sh, rev-d
 
 - Review / Repair `[REV-D]` sections
-- [ ] verify_backup()
-- [ ] cleanup_old_backups()
-- [ ] show_usage()
+- [x] inspect_backup_file()
 
 vibe-coded-with: Claude
 reason: SQL, Bash practice
@@ -124,8 +140,11 @@ reason: SQL, Bash practice
 ```
 feat(db): review extras in data.sh, rev-c
 
-- Fixed list_backups(), show_backup_info()
 - Review / repair `[REV-C]` sections
+
+Fixed 
+- [x] list_backups()
+- [x] show_backup_info()
 
 vibe-coded-with: Claude
 reason: SQL, Bash practice
@@ -279,3 +298,9 @@ Reason: SQL practice
 
 ### Database Testing Notes
 - [ ] `--force`, `-f` on `restore`
+
+## Notes
+
+### Verify Backup (Database)
+- '"Gold Standard" is a **full restore** to a separate, isolated environment (e.g. a test server), *then*
+- Running tests / integrity checks' -Google Gemini

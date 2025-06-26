@@ -226,7 +226,7 @@ EOF
 
 }
 
-# [x] [REV-B] Keep - Fixed and synced with create_backup()
+# [x] [REV-B] Keep - Fixed and synced with create_backup() 
 restore_backup() {
     # Usage: {$0 [ACTION] [OPTION/"ARG2"]} // {$0 restore [NULL|date]}
     # Examples: {$0 restore} // {$0 restore 2024-12-25}
@@ -243,7 +243,7 @@ restore_backup() {
         # info_pathname=$(ls "$info_dir"/info_*.json 2>/dev/null | sort | tail -1)
         info_pathname="$info_dir/info.json"
     else
-        echo -e "\n🔍 Looking for backup from date: $backup_date"
+        echo -e "\n🔍 Looking for latest backup from date: $backup_date"
         # Convert YYYY-MM-DD to YYYYMMDD format to match create_backup() naming
         local timestamp_format=$(echo "$backup_date" | tr -d '-')
         
@@ -252,13 +252,15 @@ restore_backup() {
             | sort -r \
             | head -n 1)
 
+        # [x] [REV-D] Remove. Don't want random files that match date
         # If exact date format doesn't work, try finding any backup from that date
-        if [ ! -f "$backup_pathname" ]; then
-            backup_pathname=$(find "$BACKUP_BASE_DIR" -type f -name "*${timestamp_format}*.sql" \
-                | sort -r \
-                | head -n 1)
-        fi
+        # if [ ! -f "$backup_pathname" ]; then
+        #     backup_pathname=$(find "$BACKUP_BASE_DIR" -type f -name "*${timestamp_format}*.sql" \
+        #         | sort -r \
+        #         | head -n 1)
+        # fi
 
+        # [ ] [TODO] Move out of this if. Test
         if [ -n "$backup_pathname" ] && [ -f "$backup_pathname" ]; then
             echo "✅ Found backup: $backup_pathname"
         else
@@ -277,19 +279,6 @@ restore_backup() {
             exit 1
         fi
     fi
-
-    # [ ] [FEAT] If requested backup not found, show available backups
-    #         echo "💡 Available backups:"
-    #         ls "$BACKUP_BASE_DIR"/bak_*.sql 2>/dev/null | while read -r file; do
-    #             if [ -f "$file" ]; then
-    #                 # Extract date from filename for display
-    #                 local filename=$(basename "$file" .sql)
-    #                 local timestamp_part=$(echo "$filename" | sed 's/bak_//')
-    #                 local display_date=$(echo "$timestamp_part" \
-    #                     | sed 's/^\([0-9]\{8\}\).*/\1/' \
-    #                     | sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1-\2-\3/')
-    #                 echo "   - $display_date ($filename)"
-    #             fi
 
     echo "🔄 Restoring database from backup..."
     echo "📄 Backup file: $backup_pathname"
@@ -438,41 +427,77 @@ show_backup_info() {
     echo ""
 }
 
-# [ ] [REV-X]
-verify_backup() {
+
+
+# TEST-RESTORE
+# - Not implemented yet
+
+
+
+# [x] [REV-D] Keep
+# Simple backup-file inspection.  Checks that:
+# - file exists
+# - is not empty
+# - contains *some* expected SQL patterns
+inspect_backup_file() {
+    # Usage: {$0 [ACTION] [OPTION/"ARG2"]} // {$0 inspect [NULL|date]}
+    # Examples: {$0 inspect} // {$0 inspect 2024-12-25}
+    # Runs: inspect_backup_file "ARG2"   # ARG2 = YYYY-MM-DD or NULL
     local backup_date="${1:-latest}"
-    local backup_dir
+    local backup_dir="$BACKUP_BASE_DIR"
+    local backup_pathname
     
     if [ "$backup_date" = "latest" ]; then
-        backup_dir="$BACKUP_BASE_DIR/latest"
-        if [ ! -L "$backup_dir" ]; then
-            echo "❌ No latest backup found"
-            exit 1
-        fi
-        backup_dir="$BACKUP_BASE_DIR/$(readlink "$backup_dir")"
+        echo "🔍 Using latest backup ..."
+        backup_pathname="$BACKUP_BASE_DIR/bak.sql"
     else
-        backup_dir="$BACKUP_BASE_DIR/$backup_date"
+        echo -e "\n🔍 Looking for latest backup from date: $backup_date"
+        # Convert YYYY-MM-DD to YYYYMMDD format to match create_backup() naming
+        local timestamp_format=$(echo "$backup_date" | tr -d '-')
+
+        # Look for latest backup file that includes the date (could have time component)
+        backup_pathname=$(find "$BACKUP_BASE_DIR" -type f -name "bak_${timestamp_format}_*.sql" \
+            | sort -r \
+            | head -n 1)
+
+        # [x] [REV-D] Remove. Don't want random files that match date
+        # If exact date format doesn't work, try finding any backup from that date
+        # if [ ! -f "$backup_pathname" ]; then
+        #     backup_pathname=$(find "$BACKUP_BASE_DIR" -type f -name "*${timestamp_format}*.sql" \
+        #         | sort -r \
+        #         | head -n 1)
+        # fi
+
+        # backup_dir="$BACKUP_BASE_DIR/$backup_date"
     fi
+
+    if [ -n "$backup_pathname" ] && [ -f "$backup_pathname" ]; then #!mark
+        echo "✅ Found backup: $backup_pathname"
+    else
+        echo "❌ No backup found for date: $backup_date"
+        list_backups
+        exit 1
+    fi
+
+    local verify_log="$backup_dir/backup.log"
     
-    local backup_file="$backup_dir/database_backup.sql"
-    local verify_log="$backup_dir/verification.log"
+    echo "🔍 Verifying backup: $backup_pathname"
     
-    echo "🔍 Verifying backup: $backup_dir"
-    
-    if [ ! -f "$backup_file" ]; then
-        echo "❌ Backup file not found: $backup_file"
+    if [ ! -f "$backup_pathname" ]; then
+        echo "❌ Backup file not found: $backup_pathname"
         exit 1
     fi
     
     # Basic file checks
-    if [ ! -s "$backup_file" ]; then
+    if [ ! -s "$backup_pathname" ]; then
         echo "❌ Backup file is empty"
         exit 1
     fi
     
     # Check if file looks like a valid SQL dump
-    if ! head -20 "$backup_file" | grep -q "mysqldump"; then
-        echo "⚠️  File doesn't appear to be a mysqldump backup"
+    if ! head -20 "$backup_pathname" | grep -q "MariaDB dump"; then
+        echo "⚠️  File doesn't appear to be a MySQL backup"
+        exit 1
     fi
     
     # Check for basic SQL structure
@@ -482,10 +507,10 @@ verify_backup() {
         "UNLOCK TABLES"
     )
     
-    echo "🔎 Running integrity checks..." > "$verify_log"
+    echo "🔎 Running integrity checks..." >> "$verify_log"
     
     for check in "${checks[@]}"; do
-        if grep -q "$check" "$backup_file"; then
+        if grep -q "$check" "$backup_pathname"; then
             echo "✅ Found: $check" | tee -a "$verify_log"
         else
             echo "⚠️  Missing: $check" | tee -a "$verify_log"
@@ -493,9 +518,9 @@ verify_backup() {
     done
     
     # File size check
-    local file_size=$(stat -f%z "$backup_file" 2>/dev/null || stat -c%s "$backup_file" 2>/dev/null || echo 0)
+    local file_size=$(stat -f%z "$backup_pathname" 2>/dev/null || stat -c%s "$backup_pathname" 2>/dev/null || echo 0)
     if [ "$file_size" -gt 1024 ]; then
-        echo "✅ File size: $(du -h "$backup_file" | cut -f1)" | tee -a "$verify_log"
+        echo "✅ File size: $(du -h "$backup_pathname" | cut -f1)" | tee -a "$verify_log"
     else
         echo "⚠️  File size suspiciously small: $file_size bytes" | tee -a "$verify_log"
     fi
@@ -545,8 +570,6 @@ cleanup_old_backups() {
 }
 
 # [ ] [REV-X] !mark
-# [ ] add support for date-option in `info [date]`.  currently only shows latest backup info.
-# echo "  info [date]            Show backup information (default: latest)"
 show_usage() {
     echo "Usage: $0 [ACTION] [OPTIONS]"
     echo ""
@@ -555,7 +578,7 @@ show_usage() {
     echo "  restore [date]         Restore from backup (default: latest)"
     echo "  list                   List all available backups"
     echo "  info [date]            Show backup information (default: latest)"
-    echo "  verify [date]          Verify backup integrity (default: latest)"
+    echo "  inspect [date]         Inspect backup integrity (default: latest)"
     echo "  cleanup                Remove old backups (keeps last $KEEP_DAYS days)"
     echo ""
     echo "Options:"
@@ -569,7 +592,7 @@ show_usage() {
     echo "  $0 restore --force                  # Restore without confirmation"
     echo "  $0 list                             # List all backups"
     echo "  $0 info                             # Show latest backup info"
-    echo "  $0 verify 2024-12-25                # Verify specific backup"
+    echo "  $0 inspect 2024-12-25               # Inspect specific backup"
     echo "  $0 cleanup                          # Clean old backups"
     echo ""
     echo "Environment Variables:"
@@ -586,13 +609,14 @@ main() {
     validate_environment_variables
     
     # Check database connection for actions that need it
-    if [[ "$ACTION" != "list" && "$ACTION" != "info" && "$ACTION" != "verify" && "$ACTION" != "cleanup" && "$ACTION" != "help" ]]; then
+    if [[ "$ACTION" != "list" && "$ACTION" != "info" && "$ACTION" != "inspect" && "$ACTION" != "cleanup" && "$ACTION" != "help" ]]; then
         check_database_connection
     fi
 
     case "$ACTION" in
         "backup")
             create_backup "$ARG2"   # description
+            inspect_backup_file
             ;;
         "restore")
             restore_backup "$ARG2"
@@ -603,8 +627,8 @@ main() {
         "info")
             show_backup_info "$ARG2"
             ;;
-        "verify")
-            verify_backup "$ARG2"
+        "inspect")
+            inspect_backup_file "$ARG2"
             ;;
         "cleanup")
             cleanup_old_backups
