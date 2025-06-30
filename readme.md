@@ -1,54 +1,63 @@
 # VX001
-Project VX001 is a baseline setup for a fullstack web application using MySQL, express, React, and Node.js.  Emphasis given to database setup using raw SQL.
+Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstack web applications using MySQL, express, React, and Node.js.  Emphasis given to database setup using raw SQL, and Bash.
+
+<br><br>
+
+
 
 # Table of Contents
-1. [Stack](#stack)
-1. [Setup](#setup)
-1. [SKAR](#skar-action-roster)
-1. [Database](#database)
+1. [Tech Stack](#tech-stack)
+1. [Setup Procedure (Bootstrapping)](#setup-procedure)
+    1. [Database](#database)
+    1. [API](#api)
+    1. [Client](#client)
+1. [SKAR (Action Roster, To Do List)](#skar-action-roster)
 1. [Commit History](#commit-history)
-1. [Testing]
+1. [Testing](#testing)
 1. [Notes](#notes)
 
-## Stack
+<br><br>
+
+
+
+# Tech Stack
 | Type | Choice | Comment |
 | - | - | - |
 | Hardware | Single, local PC |
 | Main OS | Windows 11 |
 | Virtual Machine (VM) | WSL2 (Debian) |
+| Repo Type | Monorepo |
 | Database Source Code | Raw SQL, Bash |
 | Database Server | MySQL 8.0 Service | Running on Windows 11
 | Frontend | React |
-| Backend | Node.js, express |
+| JRE | Node.js | v22.17.0 (LTS)
+| Backend | Node.js, express | 
 | IaaS | [Railway](#railway.com) | DB, Fullstack deployment |
+| Package Manager | nvm | v10.9.2 For per-project Node.js version management |
 
-# Setup
-[Return to Table of Contents](#table-of-contents)
+<br><br><br>
 
-## Database
-1. Install MySQL Workbench onto Windows 11, including CLI tools?
-1. `root`-user and password should be created during setup-wizard
-   - Keep `root`'s `From Host` as `localhost` 
-   - `root` will only be able to connect / login from Windows *ONLY*, not from WSL2 or anywhere else, intentionally, for security
-   - Use `root` only for initialization, and distaster-recovery
-1. Login to MySQL Workbench as `root`, create an `admin`-user who will act like a `root`-user, but with ability to sign-in from non-`localhost` IP addresses (e.g. WSL2).
-    - Set "From Host" = {An IP range that includes the WSL2 IP address as seen from (Windows / MySQL Service) }
-1. Ensure that `admin` and password are set in `vx001/database/ops/.env.init`.
-1. `init.sh` will create user roles `dev`, and `app` and passwords.
-1. Ensure that `dev` and `app` passwords are properly set in `vx001/.env`
-1. `admin`-user should not be needed any more.  You can delete `.env.init`.
+
+
+
+### Client
+
+<br><br>
+
+
 
 ## SKAR (Action Roster)
 
 ### Raw AR
+- [ ] refactor(db): move db .env into database directory
+- [ ] bootstrap api
+- [ ] refactor(db): cleanup comments
 - [ ] fead(db): add comprehensive error handling and input validation
 - [ ] feat(db): test --force, -f
 - [ ] refactor(db): review DB_DEV_USER privileges
     - [ ] minimize db GRANTs for DB_DEV_USER
 - [ ] refactor(db): move seed-clean logic into seed file
-- [ ] docs(refactor): standardize commit table entires
-- [ ] create a test / unit-test? to verify proper db and seed-data creation
-- [ ] refactor(db): cleanup comments
+- [ ] docs(refactor): standardize commit table entires\
 - [ ] `reset.sh`? option in seed file
 - [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] create `utils.sh` for common functions
@@ -76,6 +85,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | Priority | Timeline | Item | Description |
 | - | - | - | - |
+| High | Later | feat(db): automate testing | unit-test? db/seed creation |
 | High | Later | feat(db): automate a full test-restore | checksum, queries |
 | Low | Later | feat(db-backup): show available backups | |
 | Low | Later | feat(db-backup): make --tag, -t option | |
@@ -99,7 +109,7 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): bootstrap api](#cm013) | 20250626b |
+| - | [feat(api): prep dev environment, test api to db](#cm013) | 20250630a |
 | x | [feat(db): review clean old backups function](#cm012) | 20250626a |
 | x | [feat(db): review extras in data.sh, rev-d](#cm011) | 20250625a |
 | x | [feat(db): review extras in data.sh, rev-c](#cm010) | 20250624a |
@@ -117,7 +127,21 @@ Project VX001 is a baseline setup for a fullstack web application using MySQL, e
 
 ### CM013
 ```
-feat(api): bootsrap api
+feat(api): prep dev environment, test api to db
+
+ENVIRONMENT
+- Remove globals: Node.js, npm
+- Install nvm to differentiate Node.js versions per project
+- Setup Node.js LTS for VX001 using .nvmrc-file
+- Create and run `setup-api.sh`
+    - Installs dependencies
+    - Initializes configuration files
+
+API
+- API Core: ./api/index.js
+- ORM (Sequelize) Configuration: ./api/config/db.js
+- Environment Variable Map: ./api/config/env.js
+- Test database connection
 ```
 
 ### CM012
@@ -300,13 +324,24 @@ Test database reset.
 Reason: SQL practice
 ```
 
+<br><br>
+
+
+
 ## Testing
 
 ### Database Testing Notes
 - [ ] `--force`, `-f` on `restore`
+
+<br><br>
+
+
 
 ## Notes
 
 ### Verify Backup (Database)
 - '"Gold Standard" is a **full restore** to a separate, isolated environment (e.g. a test server), *then*
 - Running tests / integrity checks' -Google Gemini
+
+<br><br>
+
