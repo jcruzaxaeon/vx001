@@ -14,11 +14,34 @@
 
 
 
+## Reference 
+
+### API
+1. Run command:
+    ```
+    $ cd [Project root]/api
+    $ npm run dev
+    ```
+
+
+### Web-Client
+1. Run command:
+    ```
+    $ cd [Project root]/web
+    $ npm run dev
+    ```
+
+<br><br><br>
+
+
+
+
 ## Commit History
 [Return to Table of Contents](#table-of-contents)
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
+| - | [feat(web): create React app, test user routes](#cm015) | 20250701a |
 | x | [feat(api): create basic user models and routes](#cm014) | 20250630b |
 | x | [feat(api): prep dev environment, test api to db](#cm013) | 20250630a |
 | x | [feat(db): review clean old backups function](#cm012) | 20250626a |
@@ -35,6 +58,18 @@
 | x | [refactor(db): make admin temporary, create roles](#cm001) | 20250614a |
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
+
+### CM015
+```
+feat(web): create React app, test user routes
+
+ENVIRONMENT
+- Creat project using Vite
+- Install axios
+
+WEB-CLIENT
+- 
+```
 
 ### CM014
 ```
@@ -439,6 +474,37 @@ nvm use
     $ npm start
     ```
 1. Verify that `Connection made.` message prints to console.
+
+## Web Client
+1. Setup the React project with Vite
+    > Do NOT create the `web/`-directory ahead of time
+    ```sh
+    $ cd [Project Root Folder]
+    $ npm create vite@latest
+
+    Need to install the following packages:
+    create-vite@7.0.0
+    Ok to proceed? (y) [Hit y-key]
+
+    > npx
+    > create-vite
+
+    Project name: [Type project name here. For monorepo, use "web" > Hit Enter-key]
+
+    Select a framework: [Select "React" using the up/down-keys > Hit Enter-key]
+
+    Select a variant: [Select "JavaScript" > Hit Enter-key]
+
+    $ cd web
+    $ npm install axios
+    $ npm install
+    $ npm run dev
+
+    VITE v7.0.0 ready in X ms
+    ➜  Local:   http://localhost:5173/
+    ➜  Network: use --host to expose
+    ➜  press h + enter to show help
+    ```
 
 <br><br><br>
 
