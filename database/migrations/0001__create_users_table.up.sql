@@ -1,3 +1,5 @@
+-- pathname: ./database/migrations/0001__create_users_table.up.sql
+
 CREATE TABLE IF NOT EXISTS users (
 -- Core Fields
     user_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

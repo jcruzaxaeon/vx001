@@ -1,3 +1,5 @@
+-- pathname: ./database/migrations/0002__create_nodes_table.up.sql
+
 CREATE TABLE IF NOT EXISTS nodes (
     node_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
