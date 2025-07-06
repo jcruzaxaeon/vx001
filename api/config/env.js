@@ -1,17 +1,21 @@
-// ./config/env.js
-// used-by: ./config/db.js
-import dotenv from 'dotenv';
+// Filename: config/env.js
+// Used-by: 
+//    - config/db.js
+//    - api/index.js
 
-if (process.env.NODE_ENV !== 'production') { dotenv.config(); }
+
+// Globals set in .env file
+//NODE_ENV=[development, staging, production]
 
 const config = {
-    dev: {
+    development: {
         username: process.env.DB_APP_USER,
         password: process.env.DB_APP_PASS,
         database: process.env.DB_NAME,
         host: process.env.DB_HOST,
         dialect: process.env.DB_DIALECT,
         port: process.env.DB_PORT,
+        apiPort: process.env.API_PORT || 3000,
     },
     // production: {
     //     username: process.env.MYSQLUSER,
@@ -19,7 +23,8 @@ const config = {
     //     database: process.env.MYSQLDATABASE,
     //     host: process.env.MYSQLHOST,
     //     dialect: 'mysql',
-    //     port: process.env.MYSQLPORT,
+    //     port: process.env.MYSQLPORT || 3306,
+    //     apiPort: process.env.API_PORT || 80,
     // },
 };
 

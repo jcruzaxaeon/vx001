@@ -1,10 +1,10 @@
-// ./config/db.js
-// used-by: ./api/index.js, ./api/routes/user-routes.js
+// Filename: api/config/db.js
+// used-by: 
+//     - api/index.js
+//     - api/routes/user-routes.js
 import { Sequelize } from 'sequelize';
 import envConfig from './env.js';
-
-// dotenv.config({ path: '../.env' }); // Adjust path to point to your project's root .env
-const environment = process.env.NODE_ENV || 'dev';
+const environment = process.env.NODE_ENV; // || 'dev';
 const config = envConfig[environment];
 
 const sequelize = new Sequelize(
@@ -15,7 +15,7 @@ const sequelize = new Sequelize(
     host: config.host,
     dialect: config.dialect,
     port: config.port,
-    logging: console.log, // See SQL queries in console. V2: `console.log`, V1: `true`
+    logging: console.log, // See SQL queries in console. V2: `console.log`, V1: `true` (deprecated)
   }
 );
 
