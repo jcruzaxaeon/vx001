@@ -16,6 +16,17 @@
 
 ## Reference 
 
+### Filename Convention
+Use `kebab-case.file` for everything but `ReactComponents.file`.
+
+### Reset database
+    ```
+    $ ./destroy.sh
+    $ ./setup.sh
+    $ ./migrate.sh
+    $ ./seed.sh
+    ```
+
 ### API
 1. Run command:
     ```
@@ -41,7 +52,9 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(db): remove password_hash](#cm017) | 20250706b |
+| - | [feat(api): add error-handler middleware](#cm019) | 20250707a |
+| x | [feat(web): normalize styles](#cm018) | 20250707a |
+| x | [feat(db): rename password_hash > password](#cm017) | 20250706b |
 | x | [refactor(web): add Home, Test routes](#cm016) | 20250706a |
 | x | [feat(web): create React app, test user routes](#cm015) | 20250701a |
 | x | [feat(api): create basic user model and routes](#cm014) | 20250630b |
@@ -61,10 +74,27 @@
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM019
+```
+feat(api): add error-handler middleware
+```
+
+### CM018
+```
+feat(web): normalize styles
+
+Homepage-text blended in with background.  Need to reset CSS globally.
+
+- add styles-directory to include files:
+    - global.css
+    - normalize.css
+```
+
 ### CM017
 ```
-feat(db): add password vs password_hash
+feat(db): rename password_hash > password
 
+- Change migration and seed
 - See devlog AR001
 ```
 
@@ -324,11 +354,9 @@ Reason: SQL practice
 - [ ] Add client-side validation (form validation)
 - [ ] Error handling and user feedback
 - [ ] Advanced validation (email format, password strength, etc.)
-- [ ] React Router?
 
 ### SKAR
-- [ ] AR001 - feat(db): use password vs password_hash
-- [ ] AR002 - feat(web): normalize css
+- [ ] AR003 - feat(api): basic server-side validation
 - [ ] 1. add validation middleware
     ```
     feat(web): add input validation, error handling
@@ -372,8 +400,6 @@ Reason: SQL practice
 - [ ] review validations
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 
-### SKAR Complete
-
 | Priority | Timeline | Item | Description |
 | - | - | - | - |
 | High | Later | feat(db): automate testing | unit-test? db/seed creation |
@@ -383,6 +409,13 @@ Reason: SQL practice
 | Low | Later | feat(db-backup): allow -f option | |
 | Low | Later | refactor(db): show_usage() | |
 | Low | Later | feat(db-backup): test --force, -f | |
+
+### SKAR Complete
+- [x] AR002 - feat(web): normalize css (CM018)
+- [x] AR001 - feat(db): use password vs password_hash (CM017)
+
+
+
 
 ### Deployment AR
 - [ ] input validation and error handling
@@ -457,13 +490,6 @@ project/
 1. ( [ ] "Missing steps" ) Run ` $ ./setup.sh` to create user roles `dev`, and `app`.
 1. Ensure that `dev` and `app` passwords are properly set in `vx001/.env`
 1. `admin`-user should not be needed any more.  You can delete `.env.setup`.
-1. 
-    ```
-    $ ./destroy.sh
-    $ ./setup.sh
-    $ ./migrate.sh
-    $ ./seed.sh
-    ```
 
 ## API
 
@@ -600,17 +626,7 @@ nvm use
 - Want only MVP qualilty before moving onto 2-3 "complete" projects
 - Passed E2E test for user model and routes
 
-1. I tried to "vibe-code" validation but it was a huge set of changes and additional files that (a) have not worked immediately, and (b) debugging is taking a long time and I'm not sure how much I will be learning from debugging vs building the validation code from scratch one step at a time.
-2. I'm wondering if I should just delete them and rebuild them one step at a time.
-3. I also previously had a simple App.jsx for E2E testing that worked well, but replaced it with the new buggy one.  I still have the old-App.jsx code.  Is can you show me how to integrate that file into this projects by accessing it through something like localhost:xxxx/test?
-
-FILES ADDED BY VIBE-CODING
-api/middleware/error-handler.js
-api/middleware/validation.js
-web/src/components/ErrorDisplay.jsx
-web/src/contexts/ErrorContext.jsx
-web/src/services/api.js
-(!) MAJOR CHANGES TO: web/src/App.jsx
+I'm ready to start working on "basic" server-side/(jargon-check: api?) validation.  as of right now all my routes use a try/catch, but I would like to implement validation.js & error-handler.js middleware AND maybe an asyncHandler (do i need this, is it really useful?) ... I'd like to break this validation stage up into 1 stage per commit so i'd rather not do them all at once.  Can you give me an outline of all the stages i should do if i want each commit to take about 1hour or less (of testing and debugging) per addition (meaning I don't want to do too much per commit.
 
 API
 {
@@ -638,6 +654,7 @@ WEB
     "axios": "^1.10.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+    "react-router-dom": "^7.6.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
@@ -653,13 +670,18 @@ WEB
 }
 
 FILE-STRUCTURE
+- [PLACEHOLDER]
+
 project/
     api/
         config/
             db.js
             env.js
+            setup-env.js
+        middleware/
         models/
             User.js
+        node_modules/             #git ignored
         routes/
             user-routes.js
         index.js
@@ -668,16 +690,46 @@ project/
         .env                       #API only
     database/
         backups/
+            metadata/
+                info_[DATE]_[TIME].json
+            backup.log
+            bak_[DATE]_[TIME].sql
+            bak.sql                #Recent
         migrations/
+            0001__create_users-table.down.sql
+            0001__create_users-table.up.sql
+            0002__create_nodes_table.down.sql
+            0002__create_nodes_table.up.sql
         ops/
+            clean.sh
+            data.sh
+            destroy.sh
+            migrate.sh
+            seed.sh
+            setup.sh
         seeds/
+            001__users.seed.sql========+`
+            002__nodes.seed.sql
+            clean.sql
         .env                       #DB only
     web/
         src/
+            components/
+            contexts/
+            hooks/
+            pages/
+                Home.jsx
+                Test.jsx
+            services/
+            styles/
+                global.css
+                normalize.css
+            utils/
             App.css
             App.jsx
             index.css
             main.jsx
+            Routes.jsx
         index.html
         vite.config.js
         .env                       #Web only

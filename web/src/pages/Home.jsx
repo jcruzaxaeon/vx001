@@ -1,12 +1,12 @@
 // ==== web/src/pages/Home.jsx ====
 function Home() {
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       <h1>MySQL-ERN App</h1>
       <p>Welcome to your fullstack application!</p>
       <p>This is your main application. Use the navigation above to access different sections.</p>
       
-      <div style={{ marginTop: '2rem' }}>
+      <div>
         <h2>Available Routes:</h2>
         <ul>
           <li><strong>/</strong> - Home (this page)</li>
