@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Core Fields
     user_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     username VARCHAR(50) UNIQUE,
 
 -- Utility

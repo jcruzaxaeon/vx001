@@ -12,7 +12,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Insert sample users
 INSERT INTO users (
     email,
-    password_hash,
+    password,
     username,
     email_verified,
     email_verification_token,
@@ -23,13 +23,13 @@ INSERT INTO users (
     updated_at
 ) VALUES
 -- Basic verified user
-('alice@example.com', 'hashed_password_1', 'alice123', TRUE, NULL, NULL, NULL, NULL, NOW(), NOW()),
+('alice@example.com', 'password_1', 'alice123', TRUE, NULL, NULL, NULL, NULL, NOW(), NOW()),
 
 -- Unverified user
-('bob@example.com', 'hashed_password_2', 'bobby', FALSE, 'token_bob_123', NOW() + INTERVAL 1 DAY, NULL, NULL, NOW(), NOW()),
+('bob@example.com', 'password_2', 'bobby', FALSE, 'token_bob_123', NOW() + INTERVAL 1 DAY, NULL, NULL, NOW(), NOW()),
 
 -- User with a reset token
-('charlie@example.com', 'hashed_password_3', 'charlieC', TRUE, NULL, NULL, 'reset_charlie_xyz', NOW() + INTERVAL 30 MINUTE, NOW(), NOW()),
+('charlie@example.com', 'password_3', 'charlieC', TRUE, NULL, NULL, 'reset_charlie_xyz', NOW() + INTERVAL 30 MINUTE, NOW(), NOW()),
 
 -- Edge case: no username, unverified
-('dana@example.com', 'hashed_password_4', NULL, FALSE, 'token_dana_456', NOW() + INTERVAL 2 DAY, NULL, NULL, NOW(), NOW());
+('dana@example.com', 'password_4', NULL, FALSE, 'token_dana_456', NOW() + INTERVAL 2 DAY, NULL, NULL, NOW(), NOW());

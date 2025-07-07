@@ -63,7 +63,9 @@
 
 ### CM017
 ```
-feat(db): remove password_hash
+feat(db): add password vs password_hash
+
+- See devlog AR001
 ```
 
 ### CM016
@@ -71,6 +73,7 @@ feat(db): remove password_hash
 refactor(web): add Home, Test routes
 
 Additional changes:
+- refactor(web): add react-router-dom
 - refactor(web, api): use password vs password_hash
     - [pending: db not yet updated. see devlog AR001.]
 - refactor(api): refactor env-var importing
@@ -317,7 +320,7 @@ Reason: SQL practice
 ### Roadmap
 
 #### Validation Build Plan (Step-by-Step)
-- [ ] Basic server-side validation (required fields only)
+- [ ] Basic server-side validation
 - [ ] Add client-side validation (form validation)
 - [ ] Error handling and user feedback
 - [ ] Advanced validation (email format, password strength, etc.)
@@ -325,6 +328,7 @@ Reason: SQL practice
 
 ### SKAR
 - [ ] AR001 - feat(db): use password vs password_hash
+- [ ] AR002 - feat(web): normalize css
 - [ ] 1. add validation middleware
     ```
     feat(web): add input validation, error handling
@@ -367,6 +371,8 @@ Reason: SQL practice
 - [ ] refine tables, columns
 - [ ] review validations
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
+
+### SKAR Complete
 
 | Priority | Timeline | Item | Description |
 | - | - | - | - |
@@ -451,6 +457,13 @@ project/
 1. ( [ ] "Missing steps" ) Run ` $ ./setup.sh` to create user roles `dev`, and `app`.
 1. Ensure that `dev` and `app` passwords are properly set in `vx001/.env`
 1. `admin`-user should not be needed any more.  You can delete `.env.setup`.
+1. 
+    ```
+    $ ./destroy.sh
+    $ ./setup.sh
+    $ ./migrate.sh
+    $ ./seed.sh
+    ```
 
 ## API
 
