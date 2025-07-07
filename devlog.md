@@ -52,7 +52,8 @@ Use `kebab-case.file` for everything but `ReactComponents.file`.
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): add error-handler middleware](#cm019) | 20250707a |
+| - | [feat(api): add validation](#cm020) | ? |
+| x | [feat(api): add error handling](#cm019) | 20250707a |
 | x | [feat(web): normalize styles](#cm018) | 20250707a |
 | x | [feat(db): rename password_hash > password](#cm017) | 20250706b |
 | x | [refactor(web): add Home, Test routes](#cm016) | 20250706a |
@@ -74,9 +75,27 @@ Use `kebab-case.file` for everything but `ReactComponents.file`.
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM020
+```
+feat(api): add validation
+```
+
 ### CM019
 ```
-feat(api): add error-handler middleware
+feat(api): add error handling
+
+Add server-side error handling
+
+- Create api/middleware/error-handler.js to
+    - export errorHandler
+    - export asyncHandler
+- Create api/ops/api-test.sh
+
+Modify:
+- api/routes/user-routes.js
+- api/index.js
+
+claude-coded: api-test.sh
 ```
 
 ### CM018
@@ -85,6 +104,7 @@ feat(web): normalize styles
 
 Homepage-text blended in with background.  Need to reset CSS globally.
 
+- remove inline styling
 - add styles-directory to include files:
     - global.css
     - normalize.css
@@ -348,25 +368,20 @@ Reason: SQL practice
 [Return to Table of Contents](#table-of-contents)
 
 ### Roadmap
-
-#### Validation Build Plan (Step-by-Step)
-- [ ] Basic server-side validation
-- [ ] Add client-side validation (form validation)
+1. Validation Build Plan (Step-by-Step)
+- [ ] add client-side validation (form validation)
 - [ ] Error handling and user feedback
 - [ ] Advanced validation (email format, password strength, etc.)
+1. Authentication
 
 ### SKAR
-- [ ] AR003 - feat(api): basic server-side validation
+- AR004 - feat(web): basic client-side validation (CM020)
 - [ ] 1. add validation middleware
     ```
     feat(web): add input validation, error handling
     ```
-- [ ] 2. add authentication
-- [ ] 3. create node/entries model and routes
-- [ ] 4. add error handling middleware
 - [ ] 5. upgrade global error catcher
 - [ ] feat(e2e): add password_hash
-- [ ] refactor(api): use camel case for route-files?
 - [ ] refactor(db): rename nodes to entities?
 - [ ] refactor(db): cleanup comments
 - [ ] fead(db): add comprehensive error handling and input validation
@@ -402,6 +417,7 @@ Reason: SQL practice
 
 | Priority | Timeline | Item | Description |
 | - | - | - | - |
+| High | Later | ?(api): review api-test.sh
 | High | Later | feat(db): automate testing | unit-test? db/seed creation |
 | High | Later | feat(db): automate a full test-restore | checksum, queries |
 | Low | Later | feat(db-backup): show available backups | |
@@ -411,11 +427,10 @@ Reason: SQL practice
 | Low | Later | feat(db-backup): test --force, -f | |
 
 ### SKAR Complete
+- [x] refactor(api): use camel case for route-files? NO. kebab-case.file
+- [x] AR003 - feat(api): basic server-side validation (CM019)
 - [x] AR002 - feat(web): normalize css (CM018)
 - [x] AR001 - feat(db): use password vs password_hash (CM017)
-
-
-
 
 ### Deployment AR
 - [ ] input validation and error handling
@@ -432,7 +447,7 @@ Reason: SQL practice
 
 
 
-!mark
+
 ## Project Notes
 [Return to Table of Contents](#table-of-contents)
 
@@ -613,10 +628,15 @@ nvm use
 
 
 
-## AI Prompts
+## AI Log
 [Return to Table of Contents](#table-of-contents)
 
+### Current Chats
+- Desktop Claude, jcruz731mcx@gmail.com. _Roadmap: Validation_
+
 ### Question List
+1. api/middleware/error-handler.js is mostly catching DB errors as thrown by Sequelize in the current iteration of the file right?
+2. How would this be done if I wasn't using Sequelize but rather raw SQL?
 
 ### Prompt Initialization
 ```
@@ -625,8 +645,26 @@ nvm use
 - It's a baseline for future projects (emphasis on SQL DB mgmt)
 - Want only MVP qualilty before moving onto 2-3 "complete" projects
 - Passed E2E test for user model and routes
+- current commit: feat(api) add errorHandler, asyncHandler, api-test.sh
+- I need roadmap stages that implement a reasonable amount of code associated with 1 commit per stage so that it's not too much for me to get a handle on it and learn from it.
+- I just completed a commit:
+    ```
+    feat(api): add error handling
 
-I'm ready to start working on "basic" server-side/(jargon-check: api?) validation.  as of right now all my routes use a try/catch, but I would like to implement validation.js & error-handler.js middleware AND maybe an asyncHandler (do i need this, is it really useful?) ... I'd like to break this validation stage up into 1 stage per commit so i'd rather not do them all at once.  Can you give me an outline of all the stages i should do if i want each commit to take about 1hour or less (of testing and debugging) per addition (meaning I don't want to do too much per commit.
+    Add server-side error handling
+
+    - Create api/middleware/error-handler.js to
+        - export errorHandler
+        - export asyncHandler
+    - Create api/ops/api-test.sh
+
+    Modify:
+    - api/routes/user-routes.js
+    - api/index.js
+
+    ai-coded: api-test.sh
+    ```
+(1) I want to know what would be a good next stage/commit: I'm between "validation" middleware or web-client-side form validation? ... These should probably be 2 different stages right? ... also, do I really *NEED* client side validation or can I just use the response from by server-side validation for messages to the user? if so, i guess that would *be* the client-side validation right? pushing the server-side response onto the page?
 
 API
 {
@@ -671,6 +709,7 @@ WEB
 
 FILE-STRUCTURE
 - [PLACEHOLDER]
+- Leading `#!` = Most recent addition
 
 project/
     api/
@@ -679,8 +718,11 @@ project/
             env.js
             setup-env.js
         middleware/
+            error-handler.js      #!errorHandler, asyncHandler
         models/
             User.js
+        ops/
+            api-test.sh           #!
         node_modules/             #git ignored
         routes/
             user-routes.js
@@ -708,7 +750,7 @@ project/
             seed.sh
             setup.sh
         seeds/
-            001__users.seed.sql========+`
+            001__users.seed.sql
             002__nodes.seed.sql
             clean.sql
         .env                       #DB only

@@ -13,13 +13,16 @@ import cors from 'cors';
 
 // Import routes
 import userRoutes from './routes/user-routes.js';
+import { errorHandler } from './middleware/error-handler.js';
 
 const app = express();
 const apiPort = config.apiPort; // CM016
+console.log(apiPort)
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));   //[?]
 
 // Test DB Connection (startup check)
 sequelize.authenticate()
@@ -57,13 +60,28 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/users', userRoutes);
 
-// Handle 404 routes (CM016)
+// Handle 404 routes
 // app.use(notFoundHandler);
+app.use((req, res, next) => {
+    const error = new Error(`Route ${req.originalUrl} not found`);
+    error.statusCode = 404;
+    next(error);
+});
 
-// Global error handler (must be last) (CM016)
-// app.use(globalErrorHandler);
+// Global error handler (must be last)
+app.use(errorHandler);
 
 // Start server
-app.listen(apiPort, () => {
-    console.log(`App running on http://localhost:${apiPort}`);
+app.listen(apiPort, async () => {
+    try {
+        await sequelize.authenticate();
+        console.log(`✅ Database connected successfully`);
+        console.log(`🚀 Server running on port ${apiPort}`);
+        console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        process.exit(1); // Exit if DB connection fails
+    }
 });
+
+export default app;

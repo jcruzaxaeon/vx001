@@ -1,115 +1,128 @@
 // api/routes/user-routes.js
 import express from 'express';
 import User from '../models/User.js';
+import { asyncHandler } from '../middleware/error-handler.js';
 
 const router = express.Router();
 
 // GET /api/users - Get all users
-router.get('/', async (req, res) => {
-    try {
-        const users = await User.findAll({
-            attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
-        });
-        res.json(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+router.get('/', asyncHandler(async (req, res) => {
+    const users = await User.findAll({
+        attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+    });
+    res.json({
+        success: true,
+        data: users,
+        count: users.length
+    });
+}));
 
 // GET /api/users/:id - Get single user
-router.get('/:id', async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.id, {
-            attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
-        });
-        
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        
-        res.json(user);
-    } catch (error) {
-        console.error('Error fetching user:', error);
-        res.status(500).json({ error: error.message });
+router.get('/:id', asyncHandler(async (req, res) => {
+    const user = await User.findByPk(req.params.id, {
+        attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+    });
+    if (!user) {
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+        // return res.status(404).json({ error: 'User not found' });
     }
-});
+    res.json({
+        success: true,
+        data: user
+    });
+    // console.error('Error fetching user:', error);
+    // res.status(500).json({ error: error.message });
+}));
 
 // POST /api/users - Create new user
-router.post('/', async (req, res) => {
-    try {
+router.post('/', asyncHandler(async (req, res) => {
         const { email, password, username } = req.body;
-        
         // Basic validation
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+            const error = new Error('Email and password are required');
+            error.statusCode = 400;
+            throw error;
+            // return res.status(400).json({ error: 'Email and password are required' });
         }
-        
         const user = await User.create({
             email,
             password,
             username
         });
-        
         // Return user without sensitive data
         const { password: _, reset_token: __, email_verification_token: ___, ...userResponse } = user.toJSON();
-        res.status(201).json(userResponse);
-    } catch (error) {
-        console.error('Error creating user:', error);
-        
-        // Handle unique constraint errors
-        if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(409).json({ error: 'User with this email already exists' });
-        }
-        
-        res.status(400).json({ error: error.message });
-    }
-});
+        res.status(201).json({
+            success: true,
+            data: userResponse,
+            message: 'User created successfully'
+        });
+
+
+        // console.error('Error creating user:', error);
+        // // Handle unique constraint errors
+        // if (error.name === 'SequelizeUniqueConstraintError') {
+        //     return res.status(409).json({ error: 'User with this email already exists' });
+        // }
+        // res.status(400).json({ error: error.message });
+}));
 
 // PUT /api/users/:id - Update user
-router.put('/:id', async (req, res) => {
-    try {
+router.put('/:id', asyncHandler(async (req, res) => {
         const [updated] = await User.update(req.body, {
             where: { user_id: req.params.id }
         });
-        
-        if (updated) {
-            const updatedUser = await User.findByPk(req.params.id, {
-                attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
-            });
-            res.json(updatedUser);
-        } else {
-            res.status(404).json({ error: 'User not found' });
+        if(!updated) {
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
         }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        
-        // Handle unique constraint errors
-        if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(409).json({ error: 'Email already exists' });
-        }
-        
-        res.status(400).json({ error: error.message });
-    }
-});
+        const updatedUser = await User.findByPk(req.params.id, {
+            attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+        });
+        res.json({
+            success: true,
+            data: updatedUser,
+            message: 'User updated successfully'
+        });
+        // } else {
+        //     res.status(404).json({ error: 'User not found' });
+        // }
+
+        // console.error('Error updating user:', error); 
+        // // Handle unique constraint errors
+        // if (error.name === 'SequelizeUniqueConstraintError') {
+        //     return res.status(409).json({ error: 'Email already exists' });
+        // }
+        // res.status(400).json({ error: error.message });
+}));
 
 // DELETE /api/users/:id - Delete user
-router.delete('/:id', async (req, res) => {
-    try {
-        const deleted = await User.destroy({
-            where: { user_id: req.params.id }
-        });
-        
-        if (deleted) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+router.delete('/:id', asyncHandler(async (req, res) => {
+    const deleted = await User.destroy({
+        where: { user_id: req.params.id }
+    });
+    if(!deleted) {
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }       
+    res.json({
+        success: true,
+        message: 'User deleted successfully'
+    });
+
+    // if (deleted) {
+    //     res.status(204).send();
+    // } else {
+    //     res.status(404).json({ error: 'User not found' });
+    // }
+
+    // console.error('Error deleting user:', error);
+    // res.status(500).json({ error: error.message });
+
+}));
 
 export default router;
 
