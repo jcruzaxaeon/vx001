@@ -1,6 +1,7 @@
-# Devlog - VX001
+# VX001 Devlog
 
-# Table of Contents
+## Table of Contents
+1. [Reference](#reference)
 1. [Commit History](#commit-history)
 1. [SKAR (Action Roster)](#skar-action-roster)
 1. [Project Notes](#project-notes)
@@ -17,7 +18,7 @@
 ## Reference 
 
 ### Filename Convention
-Use `kebab-case.file` for everything but `ReactComponents.file`.
+Use `kebab-case.file` for all files except `ReactComponent.file`.
 
 ### Reset database
     ```
@@ -52,7 +53,8 @@ Use `kebab-case.file` for everything but `ReactComponents.file`.
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): add validation](#cm020) | ? |
+| - | [feat(api): normalize error messages](#cm021) | - |
+| x | [feat(api): add validation](#cm020) | 20250708a |
 | x | [feat(api): add error handling](#cm019) | 20250707a |
 | x | [feat(web): normalize styles](#cm018) | 20250707a |
 | x | [feat(db): rename password_hash > password](#cm017) | 20250706b |
@@ -75,9 +77,24 @@ Use `kebab-case.file` for everything but `ReactComponents.file`.
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM021
+```
+feat(api): normalize error messages
+
+- create consistent message format for validation and db errors
+```
+
 ### CM020
 ```
-feat(api): add validation
+feat(api): add user validation
+
+- Create api/middleware/validation.js to
+    - export validateUserCreate, validateUserUpdate, validateUserId
+
+Modify:
+- api/routes/user-routes.js: use validation middleware
+- api/ops/api-test.sh: change test password to match validation rules
+- web/src/pages/Test.jsx: change test password to match validation rules
 ```
 
 ### CM019
@@ -371,21 +388,18 @@ Reason: SQL practice
 1. Validation Build Plan (Step-by-Step)
 - [ ] add client-side validation (form validation)
 - [ ] Error handling and user feedback
-- [ ] Advanced validation (email format, password strength, etc.)
 1. Authentication
 
 ### SKAR
+- [ ] Advanced validation (email format, password strength, etc.)
+- [ ] create system for client error display
 - AR004 - feat(web): basic client-side validation (CM020)
-- [ ] 1. add validation middleware
-    ```
-    feat(web): add input validation, error handling
-    ```
-- [ ] 5. upgrade global error catcher
+- [ ] upgrade global error catcher
 - [ ] feat(e2e): add password_hash
 - [ ] refactor(db): rename nodes to entities?
 - [ ] refactor(db): cleanup comments
-- [ ] fead(db): add comprehensive error handling and input validation
 - [ ] feat(db): test --force, -f
+- [ ] feat(db): finalize error handling and input validation
 - [ ] refactor(db): review DB_DEV_USER privileges
     - [ ] minimize db GRANTs for DB_DEV_USER
 - [ ] refactor(db): move seed-clean logic into seed file
@@ -394,7 +408,7 @@ Reason: SQL practice
 - [ ] update migration script: `.my.cnf`, migration_user?
 - [ ] create `utils.sh` for common functions
     - See "[MOVE] Move to `utils.sh`"
-- [ ] add validation checks to scripts
+- [ ] add db validation checks to scripts
 - [ ] decide on local-file backup system.  backup old files.
 - [ ] separate database and user creation in database scripts
 - [ ] clean setup & teardown scripts to remove non-root user
@@ -427,6 +441,9 @@ Reason: SQL practice
 | Low | Later | feat(db-backup): test --force, -f | |
 
 ### SKAR Complete
+- [x] feat(db): add basic error handling and input validation
+- [x] 1. add validation middleware
+    - feat(web): add input validation, error handling
 - [x] refactor(api): use camel case for route-files? NO. kebab-case.file
 - [x] AR003 - feat(api): basic server-side validation (CM019)
 - [x] AR002 - feat(web): normalize css (CM018)

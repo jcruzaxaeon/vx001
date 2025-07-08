@@ -7,7 +7,7 @@
 API_URL="http://172.18.90.21:3001"
 TIMEOUT=10
 TEST_EMAIL="test-$(date +%s)@example.com"  # Unique email for each test run
-TEST_PASSWORD="password123"
+TEST_PASSWORD="passWord123"
 TEST_USERNAME="testuser"
 
 # Colors for output
@@ -247,6 +247,85 @@ test_404_route() {
     check_test "404 Route" "404" "$status" "$body" "not found"
 }
 
+test_validation_missing_email() {
+    local data="{\"password\":\"$TEST_PASSWORD\",\"username\":\"$TEST_USERNAME\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Missing Email" "400" "$status" "$body" "Validation failed"
+}
+
+test_validation_invalid_email() {
+    local data="{\"email\":\"invalid-email\",\"password\":\"$TEST_PASSWORD\",\"username\":\"$TEST_USERNAME\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Invalid Email" "400" "$status" "$body" "valid email"
+}
+
+test_validation_weak_password() {
+    local data="{\"email\":\"weak-$(date +%s)@example.com\",\"password\":\"123\",\"username\":\"weakuser\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Weak Password" "400" "$status" "$body" "8 characters"
+}
+
+test_validation_password_no_uppercase() {
+    local data="{\"email\":\"noupper-$(date +%s)@example.com\",\"password\":\"alllowercase123\",\"username\":\"noupperuser\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: No Uppercase" "400" "$status" "$body" "uppercase"
+}
+
+test_validation_password_no_number() {
+    local data="{\"email\":\"nonum-$(date +%s)@example.com\",\"password\":\"NoNumbersHere\",\"username\":\"nonumuser\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: No Number" "400" "$status" "$body" "number"
+}
+
+test_validation_invalid_username() {
+    local data="{\"email\":\"invaliduser-$(date +%s)@example.com\",\"password\":\"ValidPass123\",\"username\":\"ab\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Short Username" "400" "$status" "$body" "3 and 50 characters"
+}
+
+test_validation_username_special_chars() {
+    local data="{\"email\":\"special-$(date +%s)@example.com\",\"password\":\"ValidPass123\",\"username\":\"user@domain\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Username Chars" "400" "$status" "$body" "letters, numbers"
+}
+
+test_validation_empty_body() {
+    local data="{}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Empty Body" "400" "$status" "$body" "required"
+}
+
+test_validation_invalid_user_id() {
+    result=$(make_request "GET" "/api/users/abc" "" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Invalid User ID" "400" "$status" "$body" "positive integer"
+}
+
+test_validation_update_empty_email() {
+    local data="{\"email\":\"\"}"
+    result=$(make_request "PUT" "/api/users/999" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Empty Email Update" "400" "$status" "$body" "cannot be empty"
+}
+
 # Main execution
 main() {
     print_header
@@ -267,7 +346,20 @@ main() {
     test_delete_user_not_found
     test_delete_user_success
     test_404_route
-    
+
+    echo ""
+    echo "${BLUE}Running validation tests...${NC}"
+    test_validation_missing_email
+    test_validation_invalid_email
+    test_validation_weak_password
+    test_validation_password_no_uppercase
+    test_validation_password_no_number
+    test_validation_invalid_username
+    test_validation_username_special_chars
+    test_validation_empty_body
+    test_validation_invalid_user_id
+    test_validation_update_empty_email
+
     print_footer
 }
 

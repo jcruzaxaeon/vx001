@@ -2,6 +2,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import { asyncHandler } from '../middleware/error-handler.js';
+import { validateUserCreate, validateUserUpdate, validateUserId } from '../middleware/validation.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 // GET /api/users/:id - Get single user
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
     const user = await User.findByPk(req.params.id, {
         attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
     });
@@ -37,7 +38,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }));
 
 // POST /api/users - Create new user
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', validateUserCreate, asyncHandler(async (req, res) => {
         const { email, password, username } = req.body;
         // Basic validation
         if (!email || !password) {
@@ -69,7 +70,7 @@ router.post('/', asyncHandler(async (req, res) => {
 }));
 
 // PUT /api/users/:id - Update user
-router.put('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', validateUserUpdate, asyncHandler(async (req, res) => {
         const [updated] = await User.update(req.body, {
             where: { user_id: req.params.id }
         });
@@ -99,7 +100,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 }));
 
 // DELETE /api/users/:id - Delete user
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', validateUserId, asyncHandler(async (req, res) => {
     const deleted = await User.destroy({
         where: { user_id: req.params.id }
     });

@@ -112,7 +112,7 @@ function Test() {
     const randomUser = {
       email: `test${timestamp}@example.com`,
       username: `user${timestamp}`,
-      password: `password_${timestamp}`
+      password: `passWord_${timestamp}`
     }
     console.log('Creating random user:', randomUser)
 
