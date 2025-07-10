@@ -24,11 +24,25 @@ router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
         attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
     });
     if (!user) {
+        const issues = [];
+        issues.push({
+            name: 'UserNotFound',
+            message: `User with ID ${req.params.id} not found`,
+            data: {
+                userId: req.params.id
+            }
+        });
+
         const error = new Error('User not found');
-        error.name = 'NotFoundError';
-        error.statusCode = 404;
+        error.type = '/user-not-found';
+        error.title = 'User Not Found';
+        error.status = 404;
+        error.detail = `User with ID ${req.params.id} not found`;
+        error.instance = req.originalUrl;
+        error.issues = issues;
         throw error;
-        // return res.status(404).json({ error: 'User not found' });
+
+        // return next(error);
     }
     res.json({
         success: true,

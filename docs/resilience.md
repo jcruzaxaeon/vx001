@@ -32,10 +32,13 @@
 
 ### `validateUserId`: Not a Positive Integer
 - [x] MW: Check if `userId` is a positive integer
-- [x] MW: RFC 7807
+- [x] MW: RFC7807
 - [x] MW: Return 400 - Bad Request
 - [ ] Test: String
 - [ ] Test: Negative number
+
+### `validateUserCreate`:
+- [ ] MW: RFC7807
 
 <br><br><br>
 
@@ -44,9 +47,9 @@
 ## Routes
 
 ### Get User by ID: Non-existent User
-- [ ] Route: Check if user exists in GET `/api/users/:id`
-- [ ] Route: RFC 7807
-- [ ] Route: Return 404 if not found
+- [x] Route: Check if user exists in GET `/api/users/:id`
+- [x] Route: RFC7807
+- [x] Route: Return 404 if not found
 - [ ] Client: Show "User not found" message
 - [ ] Test: `curl -H "Authorization: Bearer token" /api/users/999999`
 

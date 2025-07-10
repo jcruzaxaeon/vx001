@@ -13,8 +13,9 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(app): update err: GET-users/:id](#cm023) | ? |
-| x | [feat(app): update err: validateUserIds](#cm022) | 20250710a |
+| - | [feat(api): update err: validateUserCreate](#cm024) | ? |
+| x | [feat(api): update err: GET-users/:id](#cm023) | 20250710b |
+| x | [feat(app): update err: validateUserId](#cm022) | 20250710a |
 | x | [docs(all): restructure documentation](#cm021) | 20250709a |
 | x | [feat(api): add user validation](#cm020) | 20250708a |
 | x | [feat(api): add error handling](#cm019) | 20250707a |
@@ -39,19 +40,29 @@
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM024
+```
+feat(api): update err: validateUserCreate
+
+- update validateUserCreate-middleware to RFC7807
+```
+
 ### CM023
 ```
-feat(app): update err: GET-users/:id
+feat(api): update err: GET-users/:id
 
-- update GET-users/:id route error format
+- update GET-users/:id route error format to RFC7807
+
+Also:
+- refactor(api): modify error handler log
 ```
 
 ### CM022
 ```
-feat(app): update err: validateUserIds
+feat(app): update err: validateUserId
 
 - update validateUserId-middleware with new error format
-- choose a normalized error format: RFC 7807
+- choose a normalized error format: RFC7807
 - update web Test.jsx page to display new format
 
 Also:
@@ -366,13 +377,17 @@ Reason: SQL practice
 20250710
 
 - Decided to follow RFC 7807 error response format
-- Updated only a single resilience target with RFC7807
+- First updated only a single resilience target with RFC7807:
+    - `validateUserId`-middleware
+- Updated web-client to handle new format
+- Updated `GET users/:id` route: Non-existent user error
 
 #### Commits
-- [feat(app): update err: validateUserIds](#cm022)
+- [feat(api): update err: GET-users/:id](#cm023)
+- [feat(app): update err: validateUserId](#cm022)
 
 #### Next
-- [feat(app): update err: UserNotFound](#cm023)
+[feat(api): update err: validateUserCreate](#cm024)
 
 ### Wednesday, July 9, 2025
 20250709
