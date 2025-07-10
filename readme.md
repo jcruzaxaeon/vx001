@@ -1,26 +1,25 @@
 # VX001
 Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstack web applications using MySQL, express, React, and Node.js.  Emphasis given to database setup using raw SQL, and Bash.
 
-<br><br>
+<br><br><br>
 
 
 
-# Table of Contents
+## Table of Contents
 1. [Tech Stack](#tech-stack)
 1. [Setup Procedure (Bootstrapping)](#setup-procedure)
     1. [Database](#database)
     1. [API](#api)
     1. [Client](#client)
-1. [SKAR (Action Roster, To Do List)](#skar-action-roster)
-1. [Commit History](#commit-history)
-1. [Testing](#testing)
+1. [Monorepo File Structure](#monorepo-file-structure)
 1. [Notes](#notes)
 
-<br><br>
+<br><br><br>
 
 
 
-# Tech Stack
+
+## Tech Stack
 | Type | Choice | Comment |
 | - | - | - |
 | Hardware | Single, local PC |
@@ -40,9 +39,90 @@ Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstac
 
 
 
-### Client
+## Monorepo File Structure
+```
+- [PLACEHOLDER]
+- Leading `#!` = Most recent addition
 
-<br><br>
+project/
+    api/
+        config/
+            db.js
+            env.js
+            setup-env.js
+        middleware/
+            error-handler.js      #!errorHandler, asyncHandler
+        models/
+            User.js
+        ops/
+            api-test.sh           #!
+        node_modules/             #git ignored
+        routes/
+            user-routes.js
+        index.js
+        package.json
+        setup-api.sh
+        .env                       #API only
+    database/
+        backups/
+            metadata/
+                info_[DATE]_[TIME].json
+            backup.log
+            bak_[DATE]_[TIME].sql
+            bak.sql                #Recent
+        migrations/
+            0001__create_users-table.down.sql
+            0001__create_users-table.up.sql
+            0002__create_nodes_table.down.sql
+            0002__create_nodes_table.up.sql
+        ops/
+            clean.sh
+            data.sh
+            destroy.sh
+            migrate.sh
+            seed.sh
+            setup.sh
+        seeds/
+            001__users.seed.sql
+            002__nodes.seed.sql
+            clean.sql
+        .env                       #DB only
+    docs/
+        ai-log.md
+        commits.md
+        notebook.md
+        reference.md
+        resilience.md
+        setup.md
+        workspace.md
+    web/
+        src/
+            components/
+            contexts/
+            hooks/
+            pages/
+                Home.jsx
+                Test.jsx
+            services/
+            styles/
+                global.css
+                normalize.css
+            utils/
+            App.css
+            App.jsx
+            index.css
+            main.jsx
+            Routes.jsx
+        index.html
+        vite.config.js
+        .env                       #Web only
+    .env                           #Globals
+    devlog.md
+    README.md
+    TODO.md
+```
+
+<br><br><br>
 
 
 

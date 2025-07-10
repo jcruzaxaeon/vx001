@@ -1,60 +1,44 @@
 # VX001 Devlog
 
 ## Table of Contents
-1. [Reference](#reference)
-1. [Commit History](#commit-history)
-1. [SKAR (Action Roster)](#skar-action-roster)
-1. [Project Notes](#project-notes)
-1. [Setup Procedure](#setup-procedure)
-1. [AI Prompts](#ai-prompts)
-    1. [Question List](#question-list)
-    1. [API Bootstraping](#api-bootstraping)
+1. [July 2025](#july-2025)
+1. [Commits](#commits)
 
 <br><br><br>
 
 
 
 
-## Reference 
+## July 2025
 
-### Filename Convention
-Use `kebab-case.file` for all files except `ReactComponent.file`.
-
-### Reset database
-    ```
-    $ ./destroy.sh
-    $ ./setup.sh
-    $ ./migrate.sh
-    $ ./seed.sh
-    ```
-
-### API
-1. Run command:
-    ```
-    $ cd [Project root]/api
-    $ npm run dev
-    ```
+### Wednesday, July 9, 2025
+20250709
 
 
-### Web-Client
-1. Run command:
-    ```
-    $ cd [Project root]/web
-    $ npm run dev
-    ```
+
+
+
+
+
+
+
+
+
+
+
 
 <br><br><br>
 
 
 
 
-## Commit History
-[Return to Table of Contents](#table-of-contents)
+## Commits
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
 | - | [feat(api): normalize error messages](#cm021) | - |
-| x | [feat(api): add validation](#cm020) | 20250708a |
+| x | [docs(all): restructure documentation](#cm020) | 20250709a |
+| x | [feat(api): add user validation](#cm020) | 20250708a |
 | x | [feat(api): add error handling](#cm019) | 20250707a |
 | x | [feat(web): normalize styles](#cm018) | 20250707a |
 | x | [feat(db): rename password_hash > password](#cm017) | 20250706b |
@@ -77,11 +61,16 @@ Use `kebab-case.file` for all files except `ReactComponent.file`.
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
-### CM021
+### CM022
 ```
 feat(api): normalize error messages
 
 - create consistent message format for validation and db errors
+```
+
+### CM021
+```
+docs(all): restructure documentation
 ```
 
 ### CM020
@@ -93,8 +82,8 @@ feat(api): add user validation
 
 Modify:
 - api/routes/user-routes.js: use validation middleware
-- api/ops/api-test.sh: change test password to match validation rules
-- web/src/pages/Test.jsx: change test password to match validation rules
+- api/ops/api-test.sh: change password to match validation rules
+- web/src/pages/Test.jsx: change password to match validation rules
 ```
 
 ### CM019
@@ -375,511 +364,3 @@ Test database reset.
 
 Reason: SQL practice
 ```
-
-<br><br><br>
-
-
-
-
-## SKAR (Action Roster)
-[Return to Table of Contents](#table-of-contents)
-
-### Roadmap
-1. Validation Build Plan (Step-by-Step)
-- [ ] add client-side validation (form validation)
-- [ ] Error handling and user feedback
-1. Authentication
-
-### SKAR
-- [ ] Advanced validation (email format, password strength, etc.)
-- [ ] create system for client error display
-- AR004 - feat(web): basic client-side validation (CM020)
-- [ ] upgrade global error catcher
-- [ ] feat(e2e): add password_hash
-- [ ] refactor(db): rename nodes to entities?
-- [ ] refactor(db): cleanup comments
-- [ ] feat(db): test --force, -f
-- [ ] feat(db): finalize error handling and input validation
-- [ ] refactor(db): review DB_DEV_USER privileges
-    - [ ] minimize db GRANTs for DB_DEV_USER
-- [ ] refactor(db): move seed-clean logic into seed file
-- [ ] docs(refactor): standardize commit table entires\
-- [ ] `reset.sh`? option in seed file
-- [ ] update migration script: `.my.cnf`, migration_user?
-- [ ] create `utils.sh` for common functions
-    - See "[MOVE] Move to `utils.sh`"
-- [ ] add db validation checks to scripts
-- [ ] decide on local-file backup system.  backup old files.
-- [ ] separate database and user creation in database scripts
-- [ ] clean setup & teardown scripts to remove non-root user
-- [ ] create, test node table migration script. sql practice.
-- [ ] seed database
-- [ ] practice JOINs and QUERYs? how?
-- [ ] constraints and validation
-- [ ] indexing
-- [ ] triggers?
-- [ ] unit testing and qa
-- [ ] security hardening
-    - [ ] process visibility - password shows up in process lists when mysql runs
-    - [ ] file permissions - .env files are often readable by multiple users
-    - [ ] root access is overprivileged for migrations
-- [ ] advanced: replication, high-availability
-- [ ] verify users and global priviliges removed
-- [ ] refine tables, columns
-- [ ] review validations
-- [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
-
-| Priority | Timeline | Item | Description |
-| - | - | - | - |
-| High | Later | ?(api): review api-test.sh
-| High | Later | feat(db): automate testing | unit-test? db/seed creation |
-| High | Later | feat(db): automate a full test-restore | checksum, queries |
-| Low | Later | feat(db-backup): show available backups | |
-| Low | Later | feat(db-backup): make --tag, -t option | |
-| Low | Later | feat(db-backup): allow -f option | |
-| Low | Later | refactor(db): show_usage() | |
-| Low | Later | feat(db-backup): test --force, -f | |
-
-### SKAR Complete
-- [x] feat(db): add basic error handling and input validation
-- [x] 1. add validation middleware
-    - feat(web): add input validation, error handling
-- [x] refactor(api): use camel case for route-files? NO. kebab-case.file
-- [x] AR003 - feat(api): basic server-side validation (CM019)
-- [x] AR002 - feat(web): normalize css (CM018)
-- [x] AR001 - feat(db): use password vs password_hash (CM017)
-
-### Deployment AR
-- [ ] input validation and error handling
-- [ ] credential security best practices
-- [ ] file permission recommendations
-- [ ] SQL/JS injection prevention
-- [ ] recovery procedures
-
-### Technical Debt
-- [ ] POSIX-safety?
-    - `migrate.sh`
-
-<br><br><br>
-
-
-
-
-## Project Notes
-[Return to Table of Contents](#table-of-contents)
-
-### Monorepo File Structure
-```
-project/
-    api/
-        config/
-            db.js
-            env.js
-        models/
-            User.js
-        routes/
-            user-routes.js
-        index.js
-        package.json
-        setup-api.sh
-        .env                       #API only
-    database/
-        backups/
-        migrations/
-        ops/
-        seeds/
-        .env                       #DB only
-    web/
-        src/
-            App.css
-            App.jsx
-            index.css
-            main.jsx
-        index.html
-        vite.config.js
-        .env                       #Web only
-    .env                           #Globals
-```
-
-<br><br><br>
-
-
-
-
-# Setup Procedure
-[Return to Table of Contents](#table-of-contents)
-
-## Database
-1. Enable WSL2 on Windows 11.
-1. Install MySQL Workbench onto Windows 11, including CLI tools?
-1. `root`-user and password should be created during setup-wizard
-   - Keep `root`'s `From Host` as `localhost` 
-   - `root` will be able to (connect / login) from Windows *ONLY*, not from WSL2 or anywhere else, intentionally, for security
-   - Use `root` only for initialization, and distaster-recovery
-1. Login to MySQL Workbench as `root`, create an `admin`-user who will act like a `root`-user, but with ability to sign-in from non-`localhost` IP addresses (e.g. WSL2).
-    - Set "From Host" = {An IP range that includes the WSL2 IP address as seen from (Windows / MySQL80 Service) }
-1. Ensure that `admin` and password are set in `vx001/database/ops/.env.setup`.
-1. ( [ ] "Missing steps" ) Run ` $ ./setup.sh` to create user roles `dev`, and `app`.
-1. Ensure that `dev` and `app` passwords are properly set in `vx001/.env`
-1. `admin`-user should not be needed any more.  You can delete `.env.setup`.
-
-## API
-
-### Install `nvm`
-Use `nvm` to run different versions of `Node.js` for each per project.
-1. If you currently have `Node.js` and/or `npm` installed globally, and have other projects that depend on them, take note of the `Node.js` version:
-    ```sh
-    $ node --version
-    ```
-1. Uninstall both `Node.js`, and `nvm`:
-    > ⚠️ This removal will break any existing projects that depend on your globally installed version of `Node.js`.  However, you can re-enable that same version for your projects using `nvm`.
-    ```sh
-    $ sudo apt remove nodejs npm
-    $ sudo rm -rf /usr/local/bin/node   #Clean symlinks
-    $ sudo rm -rf /usr/local/bin/npm    #Clean symlinks
-    ```
-1. Install `nvm` (Node Version Manager) by visiting its [GitHub page](https://github.com/nvm-sh/nvm) and copying the latest (install / update) script which should look like the command below:
-    - [VERSION] (e.g. `0.40.3`)
-    ```sh
-    $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v[VERSION]/install.sh | bash
-    ```
-1. Restart your terminal.
-1. Verify `nvm` installation
-    ```sh
-    $ nvm --version
-    [VERSION]
-    ```
-
-### `Node.js` One-Time Setup
-1. Setup `Node.js`
-    ```sh
-    cd [PATH]/project-root
-    nvm install --lts       #Readies Node.js vLTS for use
-    echo "lts/*" > .nvmrc   #Tells nvm to use vLTS
-    ```
-2. Set the appropriate version for your other projects: 
-    ```sh
-    cd [PATH]/project2-root
-    nvm install [Version Number] #e.g. `nvm install 20.1.1`
-    echo "[Version Number]" > .nvmrc
-    ```
-
-### Per-terminal
-Every time you open the terminal you'll need to run to actually use `Node.js`:
-```sh
-cd [PATH]/project-root
-nvm use
-```
-
-### Initialize Project
-1. Setup dependencies and initialize configuration files by running `setup-api.sh` script:
-    - Replace `[PATH]` with actual path to `api`-directory.
-    ```sh
-    $ cd [PATH]/project-root/api           #Move into api directory
-    $ chmod +x setup-api.sh   #Make setup script executable
-    $ ./setup-api.sh          #Run setup script
-    ```
-1. Add or configure the following in `package.json`:
-    ```
-    {
-        "type": "module",
-        "scripts": {
-            "start": "node index.js"
-            "dev": "nodemon index.js"
-        }
-    }
-    ```
-1. Replace [Placeholder]-values with actual environment-variable-values in `./.env`-file.
-1. Run:
-    ```sh
-    $ cd ./api
-    $ npm start
-    ```
-1. Verify that `Connection made.` message prints to console.
-
-## Web Client
-1. Setup the React project with Vite
-    > Do NOT create the `web/`-directory ahead of time
-    ```sh
-    $ cd [Project Root Folder]
-    $ npm create vite@latest
-
-    Need to install the following packages:
-    create-vite@7.0.0
-    Ok to proceed? (y) [Hit y-key]
-
-    > npx
-    > create-vite
-
-    Project name: [Type project name here. For monorepo, use "web" > Hit Enter-key]
-
-    Select a framework: [Select "React" using the up/down-keys > Hit Enter-key]
-
-    Select a variant: [Select "JavaScript" > Hit Enter-key]
-
-    $ cd web
-    $ npm install axios react-routeer-dom
-    $ npm install
-    $ npm run dev
-
-    VITE v7.0.0 ready in X ms
-    ➜  Local:   http://localhost:5173/
-    ➜  Network: use --host to expose
-    ➜  press h + enter to show help
-    ```
-
-## Basic Validation
-1. Add `BrowserRouter` to `web/src/main.jsx`
-1. Create basic routes in `web/src/Routes.jsx`
-1. Create `web/scr/components/`: `Home.jsx`, `Test.jsx`
-1. Update `web/src/App.jsx` with `<AppRoutes />` and links to components
-
-## Global Error Handling
-
-## Authentication
-
-## Database Relationship Management
-
-<br><br><br>
-
-
-
-
-## AI Log
-[Return to Table of Contents](#table-of-contents)
-
-### Current Chats
-- Desktop Claude, jcruz731mcx@gmail.com. _Roadmap: Validation_
-
-### Question List
-1. api/middleware/error-handler.js is mostly catching DB errors as thrown by Sequelize in the current iteration of the file right?
-2. How would this be done if I wasn't using Sequelize but rather raw SQL?
-
-### Prompt Initialization
-```
-- I am learning
-- I have connected web-api-db for a fullstack MySQL-ERN app
-- It's a baseline for future projects (emphasis on SQL DB mgmt)
-- Want only MVP qualilty before moving onto 2-3 "complete" projects
-- Passed E2E test for user model and routes
-- current commit: feat(api) add errorHandler, asyncHandler, api-test.sh
-- I need roadmap stages that implement a reasonable amount of code associated with 1 commit per stage so that it's not too much for me to get a handle on it and learn from it.
-- I just completed a commit:
-    ```
-    feat(api): add error handling
-
-    Add server-side error handling
-
-    - Create api/middleware/error-handler.js to
-        - export errorHandler
-        - export asyncHandler
-    - Create api/ops/api-test.sh
-
-    Modify:
-    - api/routes/user-routes.js
-    - api/index.js
-
-    ai-coded: api-test.sh
-    ```
-(1) I want to know what would be a good next stage/commit: I'm between "validation" middleware or web-client-side form validation? ... These should probably be 2 different stages right? ... also, do I really *NEED* client side validation or can I just use the response from by server-side validation for messages to the user? if so, i guess that would *be* the client-side validation right? pushing the server-side response onto the page?
-
-API
-{
-  ...
-  "dependencies": {
-    "basic-auth": "^2.0.1",
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^17.0.0",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.14.1",
-    "sequelize": "^6.37.7"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3"
-  }
-}
-
-WEB
-{
-  ...
-  "dependencies": {
-    "axios": "^1.10.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-    "react-router-dom": "^7.6.3"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.5.2",
-    "eslint": "^9.29.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.2.0",
-    "vite": "^7.0.0"
-  }
-}
-
-FILE-STRUCTURE
-- [PLACEHOLDER]
-- Leading `#!` = Most recent addition
-
-project/
-    api/
-        config/
-            db.js
-            env.js
-            setup-env.js
-        middleware/
-            error-handler.js      #!errorHandler, asyncHandler
-        models/
-            User.js
-        ops/
-            api-test.sh           #!
-        node_modules/             #git ignored
-        routes/
-            user-routes.js
-        index.js
-        package.json
-        setup-api.sh
-        .env                       #API only
-    database/
-        backups/
-            metadata/
-                info_[DATE]_[TIME].json
-            backup.log
-            bak_[DATE]_[TIME].sql
-            bak.sql                #Recent
-        migrations/
-            0001__create_users-table.down.sql
-            0001__create_users-table.up.sql
-            0002__create_nodes_table.down.sql
-            0002__create_nodes_table.up.sql
-        ops/
-            clean.sh
-            data.sh
-            destroy.sh
-            migrate.sh
-            seed.sh
-            setup.sh
-        seeds/
-            001__users.seed.sql
-            002__nodes.seed.sql
-            clean.sql
-        .env                       #DB only
-    web/
-        src/
-            components/
-            contexts/
-            hooks/
-            pages/
-                Home.jsx
-                Test.jsx
-            services/
-            styles/
-                global.css
-                normalize.css
-            utils/
-            App.css
-            App.jsx
-            index.css
-            main.jsx
-            Routes.jsx
-        index.html
-        vite.config.js
-        .env                       #Web only
-    .env                           #Globals
-```
-
-### API Bootstraping
-I've been learning SQL and Bash by setting up a database on WSL2 while using a MySQL service on Windows.  I feel like I have the DB at MVP status with the following scripts: setup, destroy, seed, clean, migrate, and data (backup, restore, etc).  The next step is building the backend/(api ... could the backend folder be called that?).  For now, I will be testing using Postman.  For the sake of simplicity I'd like to follow a previous project I was working on, but I don't know where to start exactly.  But I think this would help (package.json):
-
-package.json for OLD PROJECT
-```
-{
-  "name": "vx000",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@sendgrid/mail": "^8.1.3",
-    "basic-auth": "^2.0.1",
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.10.1",
-    "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
-  }
-}
-```
-
-I think I was using JS and Node.js ... here's some of the OLD PROJCET file structure and some of the files:
-
-api/
-   config/
-      db.js, env.js
-   middleware/
-      authentication.js
-   models/
-      index.js, Node.js, Review.js, User.js
-   node_modules/
-   routes/
-      node-routes.js, review-routes.js, user-routes.js
-   services/
-      email.js
-   index.js
-client/ (not working on this yet)
-
-
-Can you give me a Markdown procedure (artifact) of where I should start?  I think I'm really asking how to bootstrap the API:
-
-CURRENT PROJECT FILE STRUCTURE
-```
-project/
-   database/
-      backups/, migrations/, ops/, seeds/
-   .env
-   readme.md
-```
-
-### File Structure
-```
-Is it good for my monorepo webapp project:
-```
-project/
-   api/
-   database/
-   client_web/
-   .env
-```
-
-To provide another `.env` *inside* of `api/` or should I reference the `.env` in the project's root (currently used by all the db code)? ... (2) If it would be better for api to have its own `.env` then should database/ and client_web/ also have their own `.env`? ... (3) Is there a better name for web_client/? (I was going to use: frontend or client, but they don't specify that the client is a webpage vs a phone app)
-```
-
-## General Notes
-
-### Linux Package Removal
-1. Uninstall example:
-    ```sh
-    sudo apt remove nodejs npm
-    ```
-1. **CLEANUP** Symlinks
-    ```sh
-    sudo rm -rf /usr/local/bin/node
-    sudo rm -rf /usr/local/bin/npm
-    ```
