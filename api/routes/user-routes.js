@@ -25,6 +25,7 @@ router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
     });
     if (!user) {
         const error = new Error('User not found');
+        error.name = 'NotFoundError';
         error.statusCode = 404;
         throw error;
         // return res.status(404).json({ error: 'User not found' });

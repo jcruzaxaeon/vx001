@@ -2,6 +2,26 @@ feat(api): update validation
 
 - [?] check/update/document email, username, password validation rules in `resilience.md`
 
+```
+// In your User model, if you had:
+const User = sequelize.define('User', {
+    email: {
+        type: DataTypes.STRING,
+        validate: {
+            isEmail: true,  // Built-in Sequelize validation
+            notEmpty: true
+        }
+    }
+});
+
+// This would throw SequelizeValidationError:
+await User.create({ email: 'invalid-email' });
+```
+
+```
+I think I understand.  (1) It seems like I might need a reference document for the kinds of errors that I need to look for, at what level they need to be protected against, and why.  Can you make a document like this for me? ... (2) 
+```
+
 feat(e2e): normalize error messages
 
 - [ ] create consistent/global format for validation and db errors

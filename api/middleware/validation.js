@@ -27,9 +27,10 @@ const isPositiveInteger = (value) => {
 };
 
 /**
- * Validation error formatter
+ * Validation error formatter !mark
  */
 const createValidationError = (field, message, value = null) => ({
+    name: 'ValidationError',
     field,
     message,
     value
@@ -189,22 +190,44 @@ export const validateUserUpdate = (req, res, next) => {
 };
 
 /**
- * User ID parameter validation
+ * User ID parameter validation !mark
  */
 export const validateUserId = (req, res, next) => {
     const { id } = req.params;
-    const errors = [];
+    const issues = [];
 
     if (!isPositiveInteger(id)) {
-        errors.push(createValidationError('id', 'User ID must be a positive integer', id));
+        // issues.push(createValidationError('id', 'User ID must be a positive integer', id));
+        issues.push({
+            name: 'UserIdValidationError',
+            message: 'User ID must be a positive integer',
+            data: {
+                field: 'user_id',
+                value: id,
+            }
+        });
     }
 
-    if (errors.length > 0) {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation failed',
-            errors
-        });
+    if (issues.length > 0) {
+        // RFC 7807 error response format
+        const error = new Error('Validation failed');
+        error.type = '/validation-error';
+        error.title = 'Validation Failed';
+        error.status = 400;
+        error.detail = 'Validation failed for user ID';
+        error.instance = req.originalUrl;
+        error.issues = issues;
+
+        return next(error);
+        // return res.status(400).json({
+        //     
+        //     type: '/validation-error',
+        //     title: 'Validation Failed',
+        //     status: 400,
+        //     detail: 'Validation failed',
+        //     instance: req.originalUrl,
+        //     issues
+        // });
     }
 
     next();

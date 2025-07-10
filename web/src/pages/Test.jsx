@@ -66,17 +66,20 @@ function Test() {
 
   const getUserById = async () => {
     if (!userId) {
-      alert('Please enter a User ID')
-      return
+      alert('Please enter a User ID');
+      return;
     }
 
     try {
-      const response = await axios.get(`/api/users/${userId}`)
-      displayResult(setGetResults, response.data)
+      const response = await axios.get(`/api/users/${userId}`);
+      displayResult(setGetResults, response.data);
     } catch (error) {
-      displayResult(setGetResults, { 
-        error: error.response?.data?.error || error.message 
-      })
+      // displayResult(setGetResults, { 
+      //   error: error.response?.data?.error || error.message 
+      // })
+      const errors = error.response?.data || [];
+      // errors.map( err => `${err.name}: ${err.message}`);
+      displayResult(setGetResults, {errors});
     }
   }
 
@@ -104,6 +107,7 @@ function Test() {
       displayResult(setCreateResults, { 
         error: error.response?.data?.error || error.message 
       })
+      // displayResult(setCreateResults, {error})
     }
   }
 

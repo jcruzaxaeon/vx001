@@ -1,10 +1,20 @@
 // api/middleware/error-handler.js
+// 
 
 /**
  * Centralized error handling middleware for Express applications
  * This should be the LAST middleware in your app (after all routes)
  */
 
+/**
+ * Used by:
+ * - api/index.js
+ * @param {*} err 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const errorHandler = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
@@ -17,6 +27,27 @@ export const errorHandler = (err, req, res, next) => {
         success: false,
         error: 'Internal Server Error'
     };
+
+    // Check for RFC7807 error format
+    if(err.type) {
+        return res.status(err.status || 500).json({
+            type: err.type,
+            title: err.title || 'Unknown Error',
+            status: err.status || 500,
+            detail: err.detail || 'An unknown error occurred',
+            instance: err.instance || req.originalUrl,
+            issues: err.issues || []
+        })
+        // if (err.name === 'ValidationError') {
+        //     response = {
+        //         success: false,
+        //         error: 'Validation Error',
+        //         details: err.message,
+        //         complete: err
+        //     };
+        //     return res.status(400).json(response);
+        // }
+    }
 
     // Sequelize Validation Error
     if (err.name === 'SequelizeValidationError') {
@@ -68,14 +99,7 @@ export const errorHandler = (err, req, res, next) => {
     }
 
     // Custom Application Errors (for future use)
-    if (err.name === 'ValidationError') {
-        response = {
-            success: false,
-            error: 'Validation Error',
-            details: err.message
-        };
-        return res.status(400).json(response);
-    }
+
 
     if (err.name === 'NotFoundError') {
         response = {

@@ -4,7 +4,7 @@
 ## Table of Contents
 
 ## Roadmap
-- [ ] Normalize error messages across API
+- [P] Normalize error messages across API
 - [ ] Add JWT authentication (register/login/logout)
 - [ ] Create frontend auth components
 - [ ] Protect private routes (API + frontend)
@@ -27,6 +27,7 @@
 - [ ] Advanced validation (email format, password strength, etc.)
 - [ ] create system for client error display
 - AR004 - feat(web): basic client-side validation (CM020)
+- [ ] integrate host into error type URI
 - [ ] upgrade global error catcher
 - [ ] feat(e2e): add password_hash
 - [ ] refactor(db): rename nodes to entities?
@@ -61,6 +62,7 @@
 - [ ] refine tables, columns
 - [ ] review validations
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
+- [ ] (!) feat(all): allow for repeated usernames by adding a random # to end of username
 
 1. Validation Build Plan (Step-by-Step)
 - [ ] add client-side validation (form validation)
