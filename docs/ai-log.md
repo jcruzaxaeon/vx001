@@ -10,6 +10,9 @@
 1. [Notes](#notes)
 
 ## Active Sessions
+1. JavaScript Email Validation Guard Clauses
+    - Desktop Claude
+    - jcruz731mcx@gmail.com
 1. API Error Validation Middleware Design
     - Desktop Claude
     - jcruz731mcx@gmail.com

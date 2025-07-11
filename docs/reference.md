@@ -1,5 +1,12 @@
 # Reference 
 
+## CLI Commands
+
+### Startup
+```
+cd /mnt/i/dev/vec/vx001
+```
+
 ## 4xx Error Codes
 | Code | Status | Description |
 |------|--------|-------------|

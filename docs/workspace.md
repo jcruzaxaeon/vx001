@@ -145,3 +145,34 @@ The tests cover all the validation scenarios including edge cases. This should b
   - Password strength requirements
   - Username constraints
 - Apply to all user routes (create, update)
+
+
+```javascript
+export const validateUserId = (req, res, next) => {
+    const { id } = req.params;
+    const issues = [];
+    // Tests
+    if (!isPositiveInteger(id)) {
+        issues.push({
+            name: 'UserIdValidationError',
+            message: 'User ID must be a positive integer',
+            data: {
+                field: 'user_id',
+                value: id,
+            }
+        });
+    }
+    if (issues.length > 0) {
+        // RFC 7807 error response format
+        const error = new Error('Validation failed');
+        error.type = '/validation-error';
+        error.title = 'Validation Failed';
+        error.status = 400;
+        error.detail = 'Validation failed for user ID';
+        error.instance = req.originalUrl;
+        error.issues = issues;
+        return next(error);
+    }
+    next();
+};
+```

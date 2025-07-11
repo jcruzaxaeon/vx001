@@ -65,6 +65,7 @@ function Test() {
   }
 
   const getUserById = async () => {
+    // Web-client form validation
     if (!userId) {
       alert('Please enter a User ID');
       return;
@@ -85,6 +86,7 @@ function Test() {
 
   // Create user functions
   const createUser = async () => {
+    // Web-client form validation
     if (!newEmail || !newPassword) {
       alert('Email and password hash are required')
       return
@@ -96,17 +98,17 @@ function Test() {
         username: newUsername || null,
         password: newPassword
       })
-
       displayResult(setCreateResults, response.data)
-
       // Clear form if successful
       setNewEmail('')
       setNewUsername('')
       setNewPassword('')
     } catch (error) {
-      displayResult(setCreateResults, { 
-        error: error.response?.data?.error || error.message 
-      })
+      const errors = error.response?.data || [];
+      displayResult(setCreateResults, {errors});
+      // displayResult(setCreateResults, { 
+      //   error: error.response?.data?.error || error.message 
+      // })
       // displayResult(setCreateResults, {error})
     }
   }

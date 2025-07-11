@@ -40,11 +40,26 @@
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
+### CM025
+```
+feat(api): update err: POST-api/users route
+
+- update (create-user)/(POST-api/users) route
+    - Location: api/routes/user-routes.js
+- use error format RFC7807
+- Test: manually disable web-validation to hit API-validation layer
+```
+
 ### CM024
 ```
-feat(api): update err: validateUserCreate
+feat(app): update err: validateUserCreate mw
 
-- update validateUserCreate-middleware to RFC7807
+- update validateUserCreate
+    - Location: api/middleware/validation.js
+- use error format RFC7807
+- update createUser to display new format
+    - Location: web/src/pages/Test.jsx
+- Test: manually disable web-validation to hit API-validation layer
 ```
 
 ### CM023
@@ -372,6 +387,14 @@ Reason: SQL practice
 
 
 ## July 2025
+
+### Friday, July 11, 2025
+20250710
+
+- Working on updating error format for `validateUserCreate`
+- [ ] change GET-all route to `api/users/all`
+    - else `api/users/` = get user by id with id input blank
+- [ ] Create a form-validation toggle in web for testing api error-check
 
 ### Thursday, July 10, 2025
 20250710

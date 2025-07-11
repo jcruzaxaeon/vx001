@@ -68,57 +68,239 @@ export const handleValidationErrors = (errors, res, message = 'Validation failed
  */
 export const validateUserCreate = (req, res, next) => {
     const { email, password, username } = req.body;
-    const errors = [];
+    const issues = [];
 
-    // Email validation
+    // ----- PSEUDO-GUARD CLAUSE BLOCK -----
+    //
+    // ----- EMAIL VALIDATION -----
+    //
+    // Is email falsy
     if (!email) {
-        errors.push(createValidationError('email', 'Email is required'));
-    } else if (typeof email !== 'string') {
-        errors.push(createValidationError('email', 'Email must be a string', email));
-    } else if (email.length > 100) {
-        errors.push(createValidationError('email', 'Email must be less than 100 characters', email));
-    } else if (!isEmail(email)) {
-        errors.push(createValidationError('email', 'Please provide a valid email address', email));
-    }
-
-    // Password validation
-    if (!password) {
-        errors.push(createValidationError('password', 'Password is required'));
-    } else if (typeof password !== 'string') {
-        errors.push(createValidationError('password', 'Password must be a string'));
-    } else if (password.length < 8) {
-        errors.push(createValidationError('password', 'Password must be at least 8 characters long'));
-    } else if (!isStrongPassword(password)) {
-        errors.push(createValidationError('password', 'Password must contain at least one uppercase letter, one lowercase letter, and one number'));
-    }
-
-    // Username validation (optional)
-    if (username !== undefined) {
-        if (username === null || username === '') {
-            // Allow empty string or null to be treated as no username
-            req.body.username = null;
-        } else if (typeof username !== 'string') {
-            errors.push(createValidationError('username', 'Username must be a string', username));
-        } else if (username.length < 3 || username.length > 50) {
-            errors.push(createValidationError('username', 'Username must be between 3 and 50 characters', username));
-        } else if (!isValidUsername(username)) {
-            errors.push(createValidationError('username', 'Username can only contain letters, numbers, underscores, and hyphens', username));
-        }
-    }
-
-    // Return errors if any
-    if (errors.length > 0) {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation failed',
-            errors
+        issues.push({
+            name: 'EmailValidationError',
+            message: 'Email is required',
+            data: {
+                field: 'email',
+                value: null,
+            }
         });
     }
+    // Is email not string
+    if (email 
+        && typeof email !== 'string'){
+        //
+        issues.push({
+                name: 'EmailValidationError',
+                message: 'Email must be a string',
+                data: {
+                    field: 'email',
+                    value: email,
+            }
+        });
+    }
+    // Is email out of limits
+    if (email
+        && typeof email === 'string'
+        && email.length > 100) {
+        //
+        issues.push({
+            name: 'EmailValidationError',
+            message: 'Email must be less than 100 characters',
+            data: {
+                field: 'email',
+                value: email,
+            }
+        });
+    }
+    // Is email format invalid
+    if (email
+        && typeof email === 'string'
+        && email.length <= 100
+        && !isEmail(email)) {
+        //
+        issues.push({
+            name: 'EmailValidationError',
+            message: 'Please provide a valid email address',
+            data: {
+                field: 'email',
+                value: email,
+            }
+        });
+    }
+
+    // ----- PASSWORD VALIDATION -----
+    //
+    // Password is falsy
+    if (!password) {
+        issues.push({
+            name: 'PasswordValidationError',
+            message: 'Password is required',
+            data: {
+                field: 'password',
+                value: null,
+            }
+        });
+    }
+    // Is password not a string
+    if (password
+        && typeof password !== 'string') {
+        //
+        issues.push({
+            name: 'PasswordValidationError',
+            message: 'Password must be a string',
+            data: {
+                field: 'password',
+                value: password,
+            }
+        });
+    }
+    // Is password out of limits
+    if (password
+        && typeof password === 'string'
+        && (password.length < 8 || password.length > 100)) {
+        //
+        issues.push({
+            name: 'PasswordValidationError',
+            message: 'Password must be at least 8 and at most 100 characters long',
+            data: {
+                field: 'password',
+                value: password,
+            }
+        });
+    }
+    // Check if password meets strength requirements
+    if (password 
+        && typeof password === 'string'
+        && (password.length >= 8 && password.length <= 100)
+        && !isStrongPassword(password)) {
+        //
+        issues.push({
+            name: 'PasswordValidationError',
+            message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+            data: {
+                field: 'password',
+                value: password,
+            }
+        });
+    }
+
+    if(issues.length > 0) {
+        // RFC7807 error response format
+        const error = new Error('Validation failed');
+        error.type = '/validation-error';
+        error.title = 'Validation Failed';
+        error.status = 400;
+        error.detail = 'Validation failed for user update';
+        error.instance = req.originalUrl;
+        error.issues = issues;
+        return next(error);
+    }
+
+    // ----- USERNAME VALIDATION -----
+    // - feature not required for V1, but included for future use
+    //
+    // Normalize username: treat undefined, null, or empty string as null
+    // if (username === undefined
+    //     || username === null
+    //     || username === '') {
+    //     //
+    //     req.body.username = null;
+    //     username = null; // Update local variable for validation
+    // }
+    // // Is username not a string
+    // if (username
+    //     && typeof username !== 'string') {
+    //     //
+    //     issues.push({
+    //         name: 'UsernameValidationError',
+    //         message: 'Username must be a string',
+    //         data: {
+    //             field: 'username',
+    //             value: username,
+    //         }
+    //     });
+    // }
+    // // Is username out of limits
+    // if (username
+    //     && typeof username === 'string'
+    //     && (username.length < 3 || username.length > 50)) {
+    //     //
+    //     issues.push({
+    //         name: 'UsernameValidationError',
+    //         message: 'Username must be between 3 and 50 characters',
+    //         data: {
+    //             field: 'username',
+    //             value: username,
+    //         }
+    //     });
+    // }
+    // // Is username format invalid
+    // if (username
+    //     && typeof username === 'string'
+    //     && (username.length >= 3 && username.length <= 50)
+    //     && !isValidUsername(username)) {
+    //     //
+    //     issues.push({
+    //         name: 'UsernameValidationError',
+    //         message: 'Username can only contain letters, numbers, underscores, and hyphens',
+    //         data: {
+    //             field: 'username',
+    //             value: username,
+    //         }
+    //     });
+    // }
 
     // Normalize email
     req.body.email = email.toLowerCase().trim();
     
     next();
+
+    // // else if (typeof email !== 'string') {
+    // //     issues.push(createValidationError('email', 'Email must be a string', email));
+    // // } else if (email.length > 100) {
+    // //     issues.push(createValidationError('email', 'Email must be less than 100 characters', email));
+    // // } else if (!isEmail(email)) {
+    // //     issues.push(createValidationError('email', 'Please provide a valid email address', email));
+    // // }
+
+    // // Password validation
+    // if (!password) {
+    //     issues.push(createValidationError('password', 'Password is required'));
+    // } else if (typeof password !== 'string') {
+    //     issues.push(createValidationError('password', 'Password must be a string'));
+    // } else if (password.length < 8) {
+    //     issues.push(createValidationError('password', 'Password must be at least 8 characters long'));
+    // } else if (!isStrongPassword(password)) {
+    //     issues.push(createValidationError('password', 'Password must contain at least one uppercase letter, one lowercase letter, and one number'));
+    // }
+
+    // // Username validation (optional)
+    // if (username !== undefined) {
+    //     if (username === null || username === '') {
+    //         // Allow empty string or null to be treated as no username
+    //         req.body.username = null;
+    //     } else if (typeof username !== 'string') {
+    //         issues.push(createValidationError('username', 'Username must be a string', username));
+    //     } else if (username.length < 3 || username.length > 50) {
+    //         issues.push(createValidationError('username', 'Username must be between 3 and 50 characters', username));
+    //     } else if (!isValidUsername(username)) {
+    //         issues.push(createValidationError('username', 'Username can only contain letters, numbers, underscores, and hyphens', username));
+    //     }
+    // }
+
+    // Return issues if any
+    // if (issues.length > 0) {
+    //     return res.status(400).json({
+    //         success: false,
+    //         message: 'Validation failed',
+    //         issues
+    //     });
+    // }
+
+    // // Normalize email
+    // req.body.email = email.toLowerCase().trim();
+    
+    // next();
 };
 
 /**
@@ -177,6 +359,7 @@ export const validateUserUpdate = (req, res, next) => {
         }
     }
 
+    // ----- V1 -----
     // Return errors if any
     if (errors.length > 0) {
         return res.status(400).json({

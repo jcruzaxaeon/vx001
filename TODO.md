@@ -24,6 +24,9 @@
 - [x] Pass E2E tests for user model
 
 ### SKAR
+- [ ] change GET-all route to `api/users/all`
+    - else `api/users/` = get user by id with id input blank
+- [ ] Create a form-validation toggle in web for testing api error-check
 - [ ] Advanced validation (email format, password strength, etc.)
 - [ ] create system for client error display
 - AR004 - feat(web): basic client-side validation (CM020)
