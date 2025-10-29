@@ -1,12 +1,13 @@
 # VX001
 Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstack web applications using MySQL, express, React, and Node.js.  Emphasis given to database setup using raw SQL, and Bash.
 
-<br><br><br>
+<br><br>
 
 
 
 ## Table of Contents
 1. [Tech Stack](#tech-stack)
+1. [Dependency List]
 1. [Setup Procedure (Bootstrapping)](#setup-procedure)
     1. [Database](#database)
     1. [API](#api)
@@ -14,7 +15,7 @@ Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstac
 1. [Monorepo File Structure](#monorepo-file-structure)
 1. [Notes](#notes)
 
-<br><br><br>
+<br><br>
 
 
 
@@ -34,7 +35,16 @@ Project VX001 is a (baseline setup / bootstrapper) for future projects: fullstac
 | IaaS | [Railway](#railway.com) | DB, Fullstack deployment |
 | Package Manager | nvm | v10.9.2 For per-project Node.js version management |
 
-<br><br><br>
+<br><br>
+
+
+
+
+## Dependency List
+- `express-session`
+- `bcrypt`
+
+<br><br>
 
 
 
@@ -122,11 +132,16 @@ project/
     TODO.md
 ```
 
-<br><br><br>
+<br><br>
 
 
 
 
+
+# Reference
+
+## Run Project Procedure
+- (!!!) 
 
 ## Testing
 

@@ -13,7 +13,8 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): update err: validateUserCreate](#cm024) | ? |
+| x | [feat(api): add session-middleware](#cm025) | --- |
+| x | [refactor(api): create reusable validation logic](#cm024) | 20251028a |
 | x | [feat(api): update err: GET-users/:id](#cm023) | 20250710b |
 | x | [feat(app): update err: validateUserId](#cm022) | 20250710a |
 | x | [docs(all): restructure documentation](#cm021) | 20250709a |
@@ -40,27 +41,25 @@
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
-### CM025
-```
-feat(api): update err: POST-api/users route
+## October 2025
 
-- update (create-user)/(POST-api/users) route
-    - Location: api/routes/user-routes.js
-- use error format RFC7807
-- Test: manually disable web-validation to hit API-validation layer
+###  CM025
+```
+feat(api): add session-middleware
+- add `bcrypt`, `express-session`
 ```
 
 ### CM024
 ```
-feat(app): update err: validateUserCreate mw
+refactor(api): create reusable validation logic
 
-- update validateUserCreate
-    - Location: api/middleware/validation.js
-- use error format RFC7807
-- update createUser to display new format
-    - Location: web/src/pages/Test.jsx
-- Test: manually disable web-validation to hit API-validation layer
+- Validation logic was previously written per CRUD target. Not DRY.
+    - e.g. validateUserCreate, validateUserUpdate
+- Rewrite to handle individual fields instead 
+    - e.g. validateUserFields
 ```
+
+## July 2025
 
 ### CM023
 ```

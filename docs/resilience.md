@@ -5,12 +5,43 @@
 1. [Middleware](#middleware)
 1. [Routes](#routes)
 1. [Global](#global)
+1. [Additional Checks]
 
 <br><br><br>
 
 
 
 ## Reference
+
+### Validation Matrix
+
+#### Validation Locations
+- [ ] Web Client
+- [ ] API Middleware (Before DB call)
+- [ ] API Route (After DB call)
+- [ ] API ORM
+- [ ] DB
+
+#### Validation Processing
+- [ ] sanitize()
+- [ ] toLowercase()
+
+#### Validation Tests
+- [ ] exists
+- [ ] isNotEmpty
+- [ ] isNotNull
+- [ ] isOkLength
+- [ ] isOkFormat
+- [ ] isUnique
+- [ ] isCorrectType (string/number/boolean/array/object)
+- [ ] isValidJSON (for JSON fields)
+- [ ] hasRequiredFields (for objects)
+- [ ] isWithinRange (for numbers/dates)
+- [ ] containsNoMaliciousCode (XSS, SQL injection patterns)
+
+#### Future Validation Tests
+- [ ] isNotOnBlocklist (profanity, banned terms)
+- [ ] matchesWhitelist (for enum-like fields)
 
 ### 4xx Error Codes
 | Code | Status | Description |
@@ -133,3 +164,44 @@
 - [ ] Route: Return 504 for timeout errors
 - [ ] Client: Show "Request timeout" error
 - [ ] Test: Simulate slow database query
+
+## Additional Considerations
+
+**Data Type & Structure:**
+- [x] isCorrectType (string/number/boolean/array/object)
+- [x] isValidJSON (for JSON fields)
+- [x] hasRequiredFields (for objects)
+- [x] isWithinRange (for numbers/dates)
+
+**Security & Content:**
+- [x] containsNoMaliciousCode (XSS, SQL injection patterns)
+- [ ] isNotOnBlocklist (profanity, banned terms)
+- [ ] matchesWhitelist (for enum-like fields)
+
+**Business Logic:**
+- [x] isUnique (emails, usernames, etc.)
+- [ ] meetsBusinessRules (age restrictions, valid combinations)
+- [ ] isAuthorized (user permissions for this action)
+- [ ] passesRateLimit
+
+**Data Integrity:**
+- [ ] isConsistentWithRelatedData
+- [ ] passesChecksumValidation (for file uploads)
+
+## Validation Location Refinements
+
+Consider adding:
+- [ ] **Form/Input Level** (real-time as user types)
+- [ ] **Pre-submission Client** (before form submit)
+- [ ] **API Gateway/Proxy** (if you have one)
+- [ ] **Background Jobs** (for async validation of heavy checks)
+
+## Regarding Your Specific Questions
+
+**Lowercase conversion:** Generally better to normalize (convert to lowercase) rather than reject. It's more user-friendly and reduces friction. Only validate case when it's actually meaningful (like passwords).
+
+**Sanitization:** Usually better to sanitize automatically, but consider doing both - sanitize for safety, then validate the sanitized result meets your requirements.
+
+
+- [ ] Create templates for common field types (email, password, etc.)
+- [ ] Build reusable validation chains so you don't have to think through the matrix every time

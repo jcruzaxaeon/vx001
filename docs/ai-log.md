@@ -10,6 +10,13 @@
 1. [Notes](#notes)
 
 ## Active Sessions
+1. MySQL and Sequelize Validation Sync
+1. Sequelize user Creation Error Handling
+    - Desktop Claude
+    - jcruz731mcx@gmail.com
+1. Beach Resort Vacation Packing Checklist
+    - Desktop Claude
+    - jcruz731mcx@gmail.com
 1. JavaScript Email Validation Guard Clauses
     - Desktop Claude
     - jcruz731mcx@gmail.com
@@ -197,4 +204,173 @@ project/
 - Constraints & Examples: [e.g., "Only provide code, no explanations," "Ensure output is in JSON format: {example}."]
 - Iterative Refinement: Start broad, then ask follow-up questions to narrow down the answer.
 
+### Error Handling
+
+#### Minimal Test File Template (`api-test.sh`)
+
+```sh
+# api/ops/api-test.sh
+# Minimal test file template
+
+# Configuration
+API_URL="http://172.18.90.21:3001"
+TIMEOUT=10
+TEST_EMAIL="test-$(date +%s)@example.com"
+TEST_PASSWORD="passWord123"
+TEST_USERNAME="testuser"
+
+# Test counters
+TOTAL_TESTS=0
+PASSED_TESTS=0
+FAILED_TESTS=0
+
+# Colors - omitted to save compute
+
+# Helper function to make HTTP requests
+make_request() {
+    local method=$1
+    local endpoint=$2
+    local data=$3
+    local expected_status=$4
+    
+    if [ -n "$data" ]; then
+        response=$(curl -s -w "\n%{http_code}" -X "$method" \
+            -H "Content-Type: application/json" \
+            -d "$data" \
+            --max-time $TIMEOUT \
+            "$API_URL$endpoint" 2>/dev/null)
+    else
+        response=$(curl -s -w "\n%{http_code}" -X "$method" \
+            --max-time $TIMEOUT \
+            "$API_URL$endpoint" 2>/dev/null)
+    fi
+    
+    # Split response body and status code
+    body=$(echo "$response" | head -n -1)
+    status=$(echo "$response" | tail -n 1)
+    
+    echo "$status|$body"
+}
+
+# Test result checker
+check_test() {
+    local test_name="$1"
+    local expected_status="$2"
+    local actual_status="$3"
+    local response_body="$4"
+    local additional_check="$5"
+    
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    
+    local pass=true
+    local comment=""
+    
+    # Check status code
+    if [ "$actual_status" != "$expected_status" ]; then
+        pass=false
+        comment="Expected $expected_status, got $actual_status"
+    fi
+    
+    # Additional checks (e.g., response contains certain fields)
+    if [ -n "$additional_check" ] && [ "$pass" = true ]; then
+        if ! echo "$response_body" | grep -q "$additional_check"; then
+            pass=false
+            comment="Response missing expected content: $additional_check"
+        fi
+    fi
+    
+    # Print result - formatting omitted to save compute
+    if [ "$pass" = true ]; then
+        echo "PASS: $test_name ($actual_status)"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+    else
+        echo "FAIL: $test_name - $comment"
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+        
+        # Show response body for failed tests
+        if [ ${#response_body} -gt 0 ]; then
+            echo "  Response: $response_body"
+        fi
+    fi
+}
+
+# Utility functions - omitted to save compute
+print_header() { echo "Starting API tests..."; }
+print_footer() { echo "Tests completed: $PASSED_TESTS passed, $FAILED_TESTS failed"; }
+check_server() { echo "Checking server..."; }
+
+# Store user ID for later tests
+USER_ID=""
+
+# Example test functions showing the pattern
+test_create_user_success() {
+    local data="{\"email\":\"$TEST_EMAIL\",\"password\":\"$TEST_PASSWORD\",\"username\":\"$TEST_USERNAME\"}"
+    result=$(make_request "POST" "/api/users" "$data" "201")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Create User (Success)" "201" "$status" "$body" "success"
+    
+    # Extract user ID for later tests
+    if [ "$status" = "201" ]; then
+        USER_ID=$(echo "$body" | grep -o '"user_id":[0-9]*' | cut -d':' -f2)
+        echo "  Created user ID: $USER_ID"
+    fi
+}
+
+test_create_user_duplicate() {
+    local data="{\"email\":\"$TEST_EMAIL\",\"password\":\"$TEST_PASSWORD\",\"username\":\"$TEST_USERNAME\"}"
+    result=$(make_request "POST" "/api/users" "$data" "409")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Create User (Duplicate)" "409" "$status" "$body" "Duplicate Entry"
+}
+
+test_validation_missing_email() {
+    local data="{\"password\":\"$TEST_PASSWORD\",\"username\":\"$TEST_USERNAME\"}"
+    result=$(make_request "POST" "/api/users" "$data" "400")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    check_test "Validation: Missing Email" "400" "$status" "$body" "required"
+}
+
+# Other test functions omitted to save compute - following same pattern
+
+# Main execution
+main() {
+    print_header
+    check_server
+    
+    # Core CRUD tests
+    test_create_user_success
+    test_create_user_duplicate
+    # Other CRUD tests omitted to save compute
+    
+    # Validation tests
+    test_validation_missing_email
+    # Other validation tests omitted to save compute
+    
+    print_footer
+}
+
+# Run main function
+main "$@"
+```
+
 ## Notes
+
+```
+(1) So for the following errors, I can only test validation, and unique constraint?
+All of the others I can test later? when I try to stress my infrastructure?
+
+[ ] SequelizeValidationError
+[ ] SequelizeUniqueConstraintError
+[ ] SequelizeConnectionError
+[ ] SequelizeForeignKeyConstraintError
+[ ] Sequelize…
+[ ] SequelizeDatabaseError
+[ ] SequelizeConnectionTimedOutError
+[ ] SequelizeHostNotFoundError
+[ ] SequelizeAccessDeniedError
+
+(2) Can you give me the script for testing the validation and unique constraint errors?
+```

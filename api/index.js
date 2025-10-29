@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/users', userRoutes);
 
-// Handle 404 routes
+// Status 404 - Route not found [BKLG000]
 // app.use(notFoundHandler);
 app.use((req, res, next) => {
     const error = new Error(`Route ${req.originalUrl} not found`);

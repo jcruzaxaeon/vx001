@@ -1,10 +1,19 @@
 # SKAR
-(Strategic Kommand Action Roster) HAVOK-branded todo list.
 
-## Table of Contents
+# Table of Contents
 
-## Roadmap
-- [P] Normalize error messages across API
+# SKAR
+Active todo list
+
+## Add sessions and authorization
+- [ ] add session middleware
+- [ ] add auth middleware
+- [ ] add auth routes
+- [ ] add auth to appropriate user routes
+- [ ] test sessions and authorization
+
+
+# Roadmap
 - [ ] Add JWT authentication (register/login/logout)
 - [ ] Create frontend auth components
 - [ ] Protect private routes (API + frontend)
@@ -15,15 +24,14 @@
 - [ ] Add setup/installation guide
 - [ ] Final testing and cleanup
 
-### Complete
-- [x] Initialize database with migrations/seeds/backups
-- [x] Initialize API with user model and routes
-- [x] Initialize web client with React/routing
-- [x] Initialize error handling
-- [x] Initialize validation middleware
-- [x] Pass E2E tests for user model
-
-### SKAR
+# Backlog
+- [ ] est. list of generic middleware functions
+- [ ] review user-validation middleware functions
+- [ ] add current development run procedure in README
+- [ ] docs() clean up project folder
+- [ ] [BKLG000] refactor: standardize 404 error
+    - "api/index.js" line 63 "// Status 404 - Route not found"
+- [P] Normalize error messages across API
 - [ ] change GET-all route to `api/users/all`
     - else `api/users/` = get user by id with id input blank
 - [ ] Create a form-validation toggle in web for testing api error-check
@@ -67,10 +75,13 @@
 - [ ] update `dev_rca` user to have migration privileges only or create a migration only user?
 - [ ] (!) feat(all): allow for repeated usernames by adding a random # to end of username
 
-1. Validation Build Plan (Step-by-Step)
+## Validation Build Plan (Step-by-Step)
 - [ ] add client-side validation (form validation)
 - [ ] Error handling and user feedback
-1. Authentication
+
+# Reference
+
+## Authentication Table
 
 | Priority | Timeline | Item | Description |
 | - | - | - | - |
@@ -84,34 +95,40 @@
 | Low  | Later | refactor(db): show_usage() | |
 | Low  | Later | feat(db-backup): test --force, -f | |
 
-### Complete SKAR Items
-- [x] feat(db): add basic error handling and input validation
-- [x] 1. add validation middleware
-    - feat(web): add input validation, error handling
-- [x] refactor(api): use camel case for route-files? NO. kebab-case.file
-- [x] AR003 - feat(api): basic server-side validation (CM019)
-- [x] AR002 - feat(web): normalize css (CM018)
-- [x] AR001 - feat(db): use password vs password_hash (CM017)
-
-### Deployment AR
+# Deployment AR
+Deployment todo list
 - [ ] input validation and error handling
 - [ ] credential security best practices
 - [ ] file permission recommendations
 - [ ] SQL/JS injection prevention
 - [ ] recovery procedures
 
-### Technical Debt
-- [ ] POSIX-safety?
-    - `migrate.sh`
+# Research Topics
+- [ ] Technical Debt
+    - [ ] POSIX-safety?
+        - `migrate.sh`
+- [ ] Global Error Handling
+- [ ] Authentication best practices
+- [ ] Database Relationship Management
 
-    ## Basic Validation
-1. Add `BrowserRouter` to `web/src/main.jsx`
-1. Create basic routes in `web/src/Routes.jsx`
-1. Create `web/scr/components/`: `Home.jsx`, `Test.jsx`
-1. Update `web/src/App.jsx` with `<AppRoutes />` and links to components
-
-## Global Error Handling
-
-## Authentication
-
-## Database Relationship Management
+# Complete
+- [x] Initialize database with migrations/seeds/backups
+- [x] Initialize API with user model and routes
+- [x] Initialize web client with React/routing
+- [x] Initialize error handling
+- [x] Initialize validation middleware
+- [x] complete basic validation
+    1. Add `BrowserRouter` to `web/src/main.jsx`
+    1. Create basic routes in `web/src/Routes.jsx`
+    1. Create `web/scr/components/`: `Home.jsx`, `Test.jsx`
+    1. Update `web/src/App.jsx` with `<AppRoutes />` and links to components
+    - [x] feat(db): add basic error handling and input validation
+- [x] add validation middleware
+- [x] feat(web): add input validation, error handling
+- [x] refactor(api): use camel case for route-files? NO. kebab-case.file
+- [x] AR003 - feat(api): basic server-side validation (CM019)
+- [x] AR002 - feat(web): normalize css (CM018)
+- [x] AR001 - feat(db): use password vs password_hash (CM017)
+- [x] Pass E2E tests for user model
+- [x] refactor user validation middleware to generic functions
+    - e.g. validateUserCreate, validateUserId to just validateUser

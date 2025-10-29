@@ -1,4 +1,4 @@
--- pathname: ./database/migrations/0001__create_users_table.up.sql
+-- pathname: database/migrations/0001__create_users_table.up.sql
 
 CREATE TABLE IF NOT EXISTS users (
 -- Core Fields

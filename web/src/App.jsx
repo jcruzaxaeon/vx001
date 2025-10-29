@@ -1,3 +1,11 @@
+/**  
+ * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ *   Application (???) Entry Point
+ *      ./web/src/App.jsx
+ * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ * 
+ */
+
 import { Link } from 'react-router-dom'
 import AppRoutes from './Routes'
 import './styles/normalize.css'

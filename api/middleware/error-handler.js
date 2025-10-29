@@ -66,7 +66,7 @@ export const errorHandler = (err, req, res, next) => {
         return res.status(400).json(response);
     }
 
-    // Sequelize Unique Constraint Error
+    // Sequelize Unique Constraint Error !mark
     if (err.name === 'SequelizeUniqueConstraintError') {
         const field = err.errors[0]?.path || 'field';
         const message = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
