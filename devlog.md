@@ -3,6 +3,7 @@
 ## Table of Contents
 1. [Commits](#commits)
 1. [July 2025](#july-2025)
+1. [October 2025](#october-2025)
 
 <br><br><br>
 
@@ -13,7 +14,8 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| x | [feat(api): add session-middleware](#cm025) | --- |
+| - | [feat(api): protect user-routes with auth]() | --- |
+| x | [feat(api): add session-middleware, auth-routes](#cm025) | 20251030a |
 | x | [refactor(api): create reusable validation logic](#cm024) | 20251028a |
 | x | [feat(api): update err: GET-users/:id](#cm023) | 20250710b |
 | x | [feat(app): update err: validateUserId](#cm022) | 20250710a |
@@ -43,10 +45,22 @@
 
 ## October 2025
 
+### CM???
+```
+feat(api): use only sessions for auth
+- remove auth dependence on email
+```
+
+### CM???
+```
+feat(api): protect user-routes with auth
+```
+
 ###  CM025
 ```
-feat(api): add session-middleware
+feat(api): add session-middleware, auth-routes
 - add `bcrypt`, `express-session`
+- user-routes not protected yet, currently fail api-test_2.sh
 ```
 
 ### CM024

@@ -10,25 +10,7 @@
 1. [Notes](#notes)
 
 ## Active Sessions
-1. MySQL and Sequelize Validation Sync
-1. Sequelize user Creation Error Handling
-    - Desktop Claude
-    - jcruz731mcx@gmail.com
-1. Beach Resort Vacation Packing Checklist
-    - Desktop Claude
-    - jcruz731mcx@gmail.com
-1. JavaScript Email Validation Guard Clauses
-    - Desktop Claude
-    - jcruz731mcx@gmail.com
-1. API Error Validation Middleware Design
-    - Desktop Claude
-    - jcruz731mcx@gmail.com
-1. API Validation Documentation Best Practices
-    - Browser Gemini
-    - jcruzedx@mgail.com
-1. Roadmap: Validation
-    - Desktop Claude
-    - jcruz731mcx@gmail.com
+1. Local Claude: "Fullstack webapp learning project"
 
 ## Pending Prompts
 1. api/middleware/error-handler.js is mostly catching DB errors as thrown by Sequelize in the current iteration of the file right?

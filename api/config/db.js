@@ -16,10 +16,29 @@ const sequelize = new Sequelize(
     dialect: config.dialect,
     port: config.port,
     logging: console.log, // See SQL queries in console. V2: `console.log`, V1: `true` (deprecated)
+
+    // Connection pool settings
+    pool: {
+      max: 5,          // Max number of connections in pool
+      min: 0,          // Min number of connections in pool
+      acquire: 30000,  // Max (ms) to try connecting before throwing error
+      idle: 10000      // Max (ms) a connection can be idle before being released
+    }
   }
 );
 
 export default sequelize;
+
+// Your existing MySQL connection pool
+// const pool = mysql.createPool({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0
+// });
 
 // import { Sequelize } from 'sequelize';
 // import dotenv from 'dotenv';

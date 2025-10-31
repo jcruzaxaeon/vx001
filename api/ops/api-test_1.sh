@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# api-test.sh - Comprehensive API testing script
+# api-test_1.sh - Comprehensive API testing script
 # Tests all user routes with good and error paths
 
 # Configuration

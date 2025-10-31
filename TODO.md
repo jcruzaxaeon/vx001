@@ -7,8 +7,10 @@ Active todo list
 
 ## Add sessions and authorization
 - [ ] add session middleware
-- [ ] add auth middleware
-- [ ] add auth routes
+    - [x] `./api/index.js`
+    - [x] Add to .env: SESSION_SECRET=random-32-char-string
+- [x] add auth middleware
+- [x] add auth routes
 - [ ] add auth to appropriate user routes
 - [ ] test sessions and authorization
 

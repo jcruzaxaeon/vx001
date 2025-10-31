@@ -1,6 +1,7 @@
 # Notebook: VX001
 
 # Table of Contents
+1. [Chromebook (Mobile Dev Environment)](#chromebook-mobile-development-environment)
 
 # Run-Project Procedure
 1. Run DB Server
@@ -40,6 +41,39 @@
    - [ ] Web client validation
    - [ ] Test API using a (Bash script / Postman?)
    - [ ] Test DB
+
+# Chromebook Mobile Development Environment
+
+## Multiple Linux(Debian) Instances
+1. Enable the multi-container flag:
+   - [ ] Open Chrome and go to chrome://flags.
+   - [ ] Search for crostini-multi-container and enable the flag.
+   - [ ] Click "Restart" when prompted to apply the change.
+1. Create a new container:
+   - [ ] After restarting, open Settings.
+   - [ ] Navigate to "Advanced" > "Developers" > "Linux development environment".
+   - [ ] Click "Manage Extra Containers".
+   - [ ] Click the "Create" button and give your new container a name. You can then set up the new Linux environment.
+1. Access your containers:
+   - [ ] You can now open the terminal from your app launcher and right-click the terminal icon.
+   - [ ] A menu will appear, allowing you to choose which installed Linux container (like your original "penguin" one or any new ones you've created) to start.
+   - [ ] Application icons from all your containers will appear in your "Linux Apps" folder.
+
+
+# Multiple Linux(Debian) Instances
+1. Enable the multi-container flag:
+   - [ ] Open Chrome and go to chrome://flags.
+   - [ ] Search for crostini-multi-container and enable the flag.
+   - [ ] Click "Restart" when prompted to apply the change.
+1. Create a new container:
+   - [ ] After restarting, open Settings.
+   - [ ] Navigate to "Advanced" > "Developers" > "Linux development environment".
+   - [ ] Click "Manage Extra Containers".
+   - [ ] Click the "Create" button and give your new container a name. You can then set up the new Linux environment.
+1. Access your containers:
+   - [ ] You can now open the terminal from your app launcher and right-click the terminal icon.
+   - [ ] A menu will appear, allowing you to choose which installed Linux container (like your original "penguin" one or any new ones you've created) to start.
+   - [ ] Application icons from all your containers will appear in your "Linux Apps" folder.
 
 # Prompts
 
