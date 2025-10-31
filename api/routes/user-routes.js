@@ -7,20 +7,26 @@ import {
     validateEmail, 
     validatePassword, 
     validateIdNumber } from '../middleware/validation.js';
+import { 
+   requireAuth,
+   requireOwnership } from '../middleware/authentication.js';
 
 const router = express.Router();
 
 // GET /api/users - Get all users
-router.get('/', asyncHandler(async (req, res) => {
-    const users = await User.findAll({
-        attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
-    });
-    res.json({
-        success: true,
-        data: users,
-        count: users.length
-    });
-}));
+router.get('/', 
+   requireAuth,
+   asyncHandler(async (req, res) => {
+      const users = await User.findAll({
+         attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+      });
+      res.json({
+         success: true,
+         data: users,
+         count: users.length
+      });
+   })
+);
 
 // GET /api/users/:id - Get single user
 // router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
@@ -86,9 +92,11 @@ router.post('/',
 
 // PUT /api/users/:id - Update user
 router.put('/:id',
-    validateEmail,
-    validatePassword,
-    validateIdNumber,
+   //  validateEmail,
+   //  validatePassword,
+   validateIdNumber,
+   requireAuth,
+   requireOwnership,
     //validateUserUpdate, 
     asyncHandler(async (req, res) => {
         const [updated] = await User.update(req.body, {
@@ -120,28 +128,33 @@ router.put('/:id',
 }));
 
 // DELETE /api/users/:id - Delete user
-router.delete('/:id', validateIdNumber, /*validateUserId,*/ asyncHandler(async (req, res) => {
-    const deleted = await User.destroy({
-        where: { user_id: req.params.id }
-    });
-    if(!deleted) {
-        const error = new Error('User not found');
-        error.statusCode = 404;
-        throw error;
-    }       
-    res.json({
-        success: true,
-        message: 'User deleted successfully'
-    });
+router.delete('/:id', 
+   validateIdNumber,
+   requireAuth,
+   requireOwnership,
+   /*validateUserId,*/ 
+   asyncHandler(async (req, res) => {
+      const deleted = await User.destroy({
+         where: { user_id: req.params.id }
+      });
+      if(!deleted) {
+         const error = new Error('User not found');
+         error.statusCode = 404;
+         throw error;
+      }       
+      res.json({
+         success: true,
+         message: 'User deleted successfully'
+      });
 
-    // if (deleted) {
-    //     res.status(204).send();
-    // } else {
-    //     res.status(404).json({ error: 'User not found' });
-    // }
+      // if (deleted) {
+      //     res.status(204).send();
+      // } else {
+      //     res.status(404).json({ error: 'User not found' });
+      // }
 
-    // console.error('Error deleting user:', error);
-    // res.status(500).json({ error: error.message });
+      // console.error('Error deleting user:', error);
+      // res.status(500).json({ error: error.message });
 
 }));
 

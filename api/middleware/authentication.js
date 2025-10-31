@@ -3,6 +3,7 @@
  * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>100
  * @file api/middleware/authentication.js
  * @description Middleware to handle user authentication and authorization
+ * @todo update requireAuth, requireOwnership to standard error format
  */
 
 /**

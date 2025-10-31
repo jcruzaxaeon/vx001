@@ -14,7 +14,8 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): protect user-routes with auth]() | --- |
+| - | [feat(api): protect all auth-routes using sessions-only](#cm027) | --- |
+| x | [feat(api): protect user-routes with auth middleware](#cm026) | 20251030b |
 | x | [feat(api): add session-middleware, auth-routes](#cm025) | 20251030a |
 | x | [refactor(api): create reusable validation logic](#cm024) | 20251028a |
 | x | [feat(api): update err: GET-users/:id](#cm023) | 20250710b |
@@ -47,13 +48,25 @@
 
 ### CM???
 ```
-feat(api): use only sessions for auth
-- remove auth dependence on email
+fix(test): delete final user
+- last user created by test-suite is not actually removed from DB even though test PASSes
 ```
 
 ### CM???
 ```
-feat(api): protect user-routes with auth
+refactor(api) update auth middleware error format
+```
+
+### CM027
+```
+feat(api): protect all auth-routes using sessions-only
+- [ ] remove auth dependence on email for all routes
+```
+
+### CM026
+```
+feat(api): protect user-routes with auth middleware
+- only protects api-test_2.sh routes
 ```
 
 ###  CM025

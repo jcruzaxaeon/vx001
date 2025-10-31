@@ -283,7 +283,8 @@ test_get_user_not_found() {
 
 test_update_own_user() {
     if [ -n "$USER_ID" ]; then
-        local data="{\"username\":\"newusername\"}"
+        local data="
+            {\"username\":\"newusername\"}"
         result=$(make_request "PUT" "/api/users/$USER_ID" "$data" "200" "true")
         status=$(echo "$result" | cut -d'|' -f1)
         body=$(echo "$result" | cut -d'|' -f2)
@@ -297,7 +298,7 @@ test_create_second_user() {
     local second_email="test2-$(date +%s)@example.com"
     local data="{
         \"email\":\"$second_email\",
-        \"password\":\"password456\",
+        \"password\":\"secondPassword456\",
         \"username\":\"testuser2\"
     }"
     
@@ -318,7 +319,7 @@ test_create_second_user() {
         make_request "POST" "/api/auth/login" "$login_data" "200" "true" > /dev/null
     fi
     
-    check_test "Create Second User" "201" "$status" "$body" "success"
+    check_test "Create Second User, then Login" "200" "$status" "$body" "success"
 }
 
 test_update_other_user_forbidden() {
