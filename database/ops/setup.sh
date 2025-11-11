@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ./database/ops/setup.sh
+# Initializes project db with only a migration-table
+
 #Requires `.env.setup` file to be present in the same directory
 
 #SET STRICT MODE

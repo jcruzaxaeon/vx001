@@ -3,16 +3,12 @@
 # ./database/ops/migrate.sh
 set -euo pipefail
 
-
-
 #VARIABLES
 SCRIPT_DIR="$(dirname "$0")"
 MIGRATIONS_DIR="$SCRIPT_DIR/../migrations"
 ACTION="${1:-up}"  #`1:` = First argument. `-up` = Default: 'up'
 MIGRATION_NAME="${2:-}"  #`2:` = Second argument. Optional specific migration file.
 ENV_DIR="$SCRIPT_DIR/../../.env"
-
-
 
 #FUNCTIONS
 load_environment_variables() {

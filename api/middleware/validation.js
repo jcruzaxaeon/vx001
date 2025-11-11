@@ -45,7 +45,7 @@ const isEmail = (email) => {
 
 const isStrongPassword = (password) => {
     // At least 8 characters, one uppercase, one lowercase, one number
-    console.log(password);
+    // console.log(password);
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     return strongPasswordRegex.test(password);
 };
@@ -188,7 +188,7 @@ export const validatePassword = (req, res, next) => {
         });
     }
 
-    console.log(password);
+    // console.log(password);
     // WEAK PASSWORD
     if (password 
         && typeof password === 'string'

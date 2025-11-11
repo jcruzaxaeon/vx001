@@ -15,6 +15,7 @@
  * @returns 
  */
 export const requireAuth = (req, res, next) => {
+  // console.log(req.session);
   if (req.session && req.session.userId) {
     // User is logged in
     return next();

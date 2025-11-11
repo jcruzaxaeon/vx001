@@ -4,11 +4,16 @@
 # Tests all user routes with good and error paths
 
 # Configuration
-API_URL="http://172.18.90.21:3001"
+API_URL="http://127.0.0.1:3001" #DB IP Address @ Chromebook
+# API_URL="http://127.18.90.21:3001" #DB IP Address @ PC
 TIMEOUT=10
 TEST_EMAIL="test-$(date +%s)@example.com"  # Unique email for each test run
 TEST_PASSWORD="passWord123"
 TEST_USERNAME="testuser"
+sleep 3
+EMAIL2="test-$(date +%s)@example.com"
+PASSWORD2="passWord123"
+USERNAME2="testuser-$(date +%s)"
 COOKIES_FILE="test_cookies.txt"
 
 # Colors for output
@@ -85,6 +90,7 @@ check_test() {
     
     # Print result
     if [ "$pass" = true ]; then
+        # Does not print out the extra line
         printf "${NC}| %-35s | %-6s | ${GREEN}%-5s${NC} | %-4s | %-30s |\n" \
             "$test_name" "$expected_status" "PASS" "$actual_status" "$comment"
         PASSED_TESTS=$((PASSED_TESTS + 1))
@@ -103,9 +109,9 @@ check_test() {
 # Print header
 print_header() {
     echo ""
-    echo "${BLUE}=== API Test Suite ===${NC}"
+    printf "${BLUE}=== API Test Suite ===${NC}\n"
     echo "Testing API at: $API_URL"
-    echo "Test Email: $TEST_EMAIL"
+    # echo "Test Email: $TEST_EMAIL"
     echo ""
     printf "+-------------------------------------+--------+-------+------+--------------------------------+\n"
     printf "| %-35s | %-6s | %-5s | %-4s | %-30s |\n" "Test Name" "Expect" "Pass?" "Got" "Comment"
@@ -145,16 +151,17 @@ print_footer() {
 
 # Check if server is running
 check_server() {
+    echo ""
     echo "Checking if server is running..."
     result=$(make_request "GET" "/api/health" "" "200" "false")
     status=$(echo "$result" | cut -d'|' -f1)
     
     if [ "$status" != "200" ]; then
-        echo "${RED}Error: Server is not running at $API_URL${NC}"
-        echo "Please start your server first: npm start"
+        printf "${RED}Error: Server is not running at $API_URL${NC}"
+        printf "Please start your server first: npm start"
         exit 1
     fi
-    echo "${GREEN}Server is running!${NC}"
+    printf "${GREEN}Server is running!${NC}\n"
 }
 
 # Test functions
@@ -190,7 +197,7 @@ test_register_user() {
         if [ -z "$USER_ID" ]; then
             USER_ID=$(echo "$body" | grep -o '"id":[0-9]*' | cut -d':' -f2)
         fi
-        echo "  ${GREEN}Created user ID: $USER_ID${NC}"
+        printf "  ${GREEN}Created user ID: $USER_ID${NC}\n"
     fi
 }
 
@@ -295,15 +302,16 @@ test_update_own_user() {
 }
 
 test_create_second_user() {
-    local second_email="test2-$(date +%s)@example.com"
+    # local EMAIL2="test2-$(date +%s)@example.com"
+
     local data="{
-        \"email\":\"$second_email\",
-        \"password\":\"secondPassword456\",
-        \"username\":\"testuser2\"
+        \"email\":\"$EMAIL2\",
+        \"password\":\"$PASSWORD2\",
+        \"username\":\"$USERNAME2\"
     }"
     
     # Temporarily logout and create new user
-    result=$(make_request "POST" "/api/auth/register" "$data" "201" "false")
+    result=$(make_request "POST" "/api/auth/register" "$data" "201" "true")
     status=$(echo "$result" | cut -d'|' -f1)
     body=$(echo "$result" | cut -d'|' -f2)
     
@@ -312,7 +320,7 @@ test_create_second_user() {
         if [ -z "$SECOND_USER_ID" ]; then
             SECOND_USER_ID=$(echo "$body" | grep -o '"id":[0-9]*' | cut -d':' -f2)
         fi
-        echo "  ${GREEN}Created second user ID: $SECOND_USER_ID${NC}"
+        printf "  ${GREEN}Created second user ID: $SECOND_USER_ID${NC}\n"
         
         # Login back as first user
         local login_data="{\"email\":\"$TEST_EMAIL\",\"password\":\"$TEST_PASSWORD\"}"
@@ -352,7 +360,35 @@ test_delete_own_user() {
         body=$(echo "$result" | cut -d'|' -f2)
         check_test "Delete Own User (Success)" "200" "$status" "$body" "success"
     else
-        check_test "Delete Own User (Success)" "200" "SKIP" "" "No user ID available"
+        check_test "Delete Own User (Fail)" "200" "SKIP" "" "No user ID available"
+    fi
+}
+
+delete_second_user() {
+    # echo "test"
+
+    # [LESSON]
+    # 1. Initially called `make_request` without `result=$(make_request)`
+    # 2. Error: prints make_request's final `echo` on test report
+    # 3. Soln: Store `echo` / return-value in `result` even if not used
+    result=$(make_request "POST" "/api/auth/logout" "" "200" "true")
+    local login_data="{
+        \"email\":\"$EMAIL2\",
+        \"password\":\"$PASSWORD2\",
+        \"username\":\"$USERNAME2\"}"
+    # echo "test2"
+    result=$(make_request "POST" "/api/auth/login" "$login_data" "200" "true")
+    status=$(echo "$result" | cut -d'|' -f1)
+    body=$(echo "$result" | cut -d'|' -f2)
+    make_request "POST" "/api/auth/login" "$login_data" "200" "true" > /dev/null
+    
+    if [ -n "$SECOND_USER_ID" ]; then
+        result=$(make_request "DELETE" "/api/users/$SECOND_USER_ID" "" "200" "true")
+        status=$(echo "$result" | cut -d'|' -f1)
+        body=$(echo "$result" | cut -d'|' -f2)
+        check_test "Delete Second User (Success)" "200" "$status" "$body" "success"
+    else
+        check_test "Delete Second User (Fail)" "200" "SKIP" "" "No user ID available"
     fi
 }
 
@@ -395,6 +431,7 @@ main() {
     test_update_other_user_forbidden
     test_delete_other_user_forbidden
     test_delete_own_user
+    delete_second_user
     
     print_footer
 }

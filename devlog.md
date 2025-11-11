@@ -1,6 +1,7 @@
 # VX001 Devlog
 
 ## Table of Contents
+1. [Devlog]
 1. [Commits](#commits)
 1. [July 2025](#july-2025)
 1. [October 2025](#october-2025)
@@ -10,7 +11,17 @@
 
 
 
-## Commits
+# Devlog
+
+## Fri. Oct 31
+[ ] Learn to create, manage db from CLI only.
+
+<br><br><br>
+
+
+
+
+# Commits
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
@@ -44,39 +55,68 @@
 | x | create, reset:  user table, migration table, migration script. sql practice. | 20250613a |
 | x | create & test database setup, teardown scripts. sql practice. | 20250612a |
 
-## October 2025
+# November 2025
 
-### CM???
+## Backlog
+Also:
+- [ ] refactor(api): (@tower) extract `validation_reference.js`
+- [ ] refactor(api): explicitly specify `.env`, `.env.api` filepath on tower workstation
+- [ ] refactor(docs): clean language, formats, outlines etc
+
+## CM???
+```
+refactor(db): rename db env-variables
+```
+
+## CM???
 ```
 fix(test): delete final user
 - last user created by test-suite is not actually removed from DB even though test PASSes
 ```
 
-### CM???
+## CM???
 ```
 refactor(api) update auth middleware error format
+- [ ]
 ```
 
-### CM027
+## CM??
+```
+feat(css): add basic css for pages
+```
+
+## CM??
+```
+feat(web): add simple user pages
+
+Also:
+- refactor(all): sync with push from chromebook
+```
+
+## CM027
 ```
 feat(api): protect all auth-routes using sessions-only
-- [ ] remove auth dependence on email for all routes
+- [x] complete first push from chromebook
+- [x] verify that all sensitive routes protected by sessions not email
+- [x] explicitly specify filepath for .env file in setup-env.js
 ```
 
-### CM026
+# October 2025
+
+## CM026
 ```
 feat(api): protect user-routes with auth middleware
 - only protects api-test_2.sh routes
 ```
 
-###  CM025
+##  CM025
 ```
 feat(api): add session-middleware, auth-routes
 - add `bcrypt`, `express-session`
 - user-routes not protected yet, currently fail api-test_2.sh
 ```
 
-### CM024
+## CM024
 ```
 refactor(api): create reusable validation logic
 
