@@ -8,7 +8,7 @@
 // Filename: api/index.js
 import './config/setup-env.js';
 import envConfig from './config/env.js';
-const environment = process.env.NODE_ENV; // || 'development';
+const environment = process.env.NODE_ENV || 'development';
 const config = envConfig[environment];
 
 import sequelize from "./config/db.js";
@@ -108,7 +108,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
 // Status 404 - Route not found [BKLG000]
-// app.use(notFoundHandler);
+// [ ] standardize error format
 app.use((req, res, next) => {
     const error = new Error(`Route ${req.originalUrl} not found`);
     error.statusCode = 404;

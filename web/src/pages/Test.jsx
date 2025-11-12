@@ -120,7 +120,7 @@ function Test() {
       username: `user${timestamp}`,
       password: `passWord_${timestamp}`
     }
-    console.log('Creating random user:', randomUser)
+    // console.log('Creating random user:', randomUser)
 
     try {
       const response = await axios.post('/api/users', randomUser)

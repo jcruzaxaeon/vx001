@@ -1,0 +1,15 @@
+# Main
+**/node_modules/
+**/.env*
+zx_*
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Omissions
+!**/*.example
