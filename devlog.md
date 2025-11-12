@@ -1,7 +1,7 @@
 # VX001 Devlog
 
 ## Table of Contents
-1. [Commits](#commits)
+1. [Commit Table](#commits)
 1. [July 2025](#july-2025)
 1. [October 2025](#october-2025)
 
@@ -10,7 +10,16 @@
 
 
 
-## Commits
+# Daily Log
+
+## October 2025
+
+### 1030
+- Need to turn Chromebook into a mobile dev workstation
+
+<br><br><br>
+
+## Commit Table
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
@@ -48,8 +57,9 @@
 
 ### CM???
 ```
-fix(test): delete final user
+fix(test): delete api-test final user
 - last user created by test-suite is not actually removed from DB even though test PASSes
+- api-test_2.sh
 ```
 
 ### CM???
@@ -57,10 +67,10 @@ fix(test): delete final user
 refactor(api) update auth middleware error format
 ```
 
-### CM027
+### [ACTIVE] CM027
 ```
 feat(api): protect all auth-routes using sessions-only
-- [ ] remove auth dependence on email for all routes
+- [ ] remove auth dependence on email, and password for all routes
 ```
 
 ### CM026
