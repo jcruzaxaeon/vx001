@@ -28,6 +28,41 @@ router.get('/',
    })
 );
 
+// GET /api/users - Get own profile
+router.get('/me', 
+   requireAuth,
+   asyncHandler(async (req, res) => {
+    if (!req.session.userId) {
+        const error = new Error('Not authenticated');
+        error.type = '/not-authenticated';
+        error.title = 'Not Authenticated';
+        error.status = 401;
+        error.detail = 'User is not logged in';
+        error.instance = req.originalUrl;
+        throw error;
+    }
+
+    const user = await User.findByPk(req.session.userId, {
+        attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+    });
+
+    if (!user) {
+        const error = new Error('User not found');
+        error.type = '/user-not-found';
+        error.title = 'User Not Found';
+        error.status = 404;
+        error.detail = `User with ID ${req.session.userId} not found`;
+        error.instance = req.originalUrl;
+        throw error;
+    }
+
+    res.json({
+        success: true,
+        data: user
+    });
+   })
+);
+
 // GET /api/users/:id - Get single user
 // router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
 router.get('/:id', 
@@ -161,5 +196,7 @@ router.delete('/:id',
       // res.status(500).json({ error: error.message });
 
 }));
+
+
 
 export default router;

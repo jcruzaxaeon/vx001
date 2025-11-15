@@ -81,7 +81,7 @@ function App() {
             </nav>
             
             <main>
-            <AppRoutes />
+                <AppRoutes />
             </main>
         </div>
     )

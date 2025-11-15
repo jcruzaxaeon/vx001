@@ -28,14 +28,9 @@ export function AuthProvider({ children }) {
             const res = await fetch(`${API_BASE}/api/auth/me`, { //Error logs 2x on this line
                 credentials: 'include'
             })
-            
-            // if(res.status === 401 && !res.ok) {
-            //     setUser(null)
-            //     return
-            // }
             if (res.ok) {
-                const data = await res.json()
-                setUser(data)
+                const info = await res.json()
+                setUser(info.data)
             } else {
                 setUser(null)
             }
@@ -58,15 +53,13 @@ export function AuthProvider({ children }) {
             credentials: 'include',
             body: JSON.stringify({ email, password })
         });
-
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.detail || 'Login failed');
         }
-
-        const data = await response.json();
-        setUser(data.data); // Update user immediately!
-        return data;
+        const info = await response.json();
+        setUser(info.data); // Update user immediately!
+        return info;
     };
 
     // const login = (userData) => {

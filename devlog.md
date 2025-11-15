@@ -17,7 +17,8 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(web): add profile](#cm30) | 20251115b |
+| - | [feat(web): add profile editing, delete](#cm31) | 20251115c |
+| x | [feat(web): add profile page](#cm30) | 20251115b |
 | x | [feat(web): add register, login, logout](#cm29) | 20251115a |
 | x | [feat(api): protect get-specific-user route](#cm28) | - |
 | x | [feat(api): protect all auth-routes using sessions-only](#cm027) | - |
@@ -95,9 +96,14 @@ feat(api): add session-secret
 - see `./api/index.js` @todo
 ```
 
+## CM31
+```
+feat(web): add profile editing and deletion
+```
+
 ## CM30
 ```
-feat(web): add profile
+feat(web): add profile page
 ```
 
 ## CM29
