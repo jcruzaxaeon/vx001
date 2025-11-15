@@ -72,7 +72,7 @@ project/
         index.js
         package.json
         setup-api.sh
-        .env                       #API only
+        .env.api                  #API only
     database/
         backups/
             metadata/
@@ -96,7 +96,7 @@ project/
             001__users.seed.sql
             002__nodes.seed.sql
             clean.sql
-        .env                       #DB only
+        .env.db                    #DB only
     docs/
         ai-log.md
         commits.md
@@ -125,7 +125,7 @@ project/
             Routes.jsx
         index.html
         vite.config.js
-        .env                       #Web only
+        .env.web                   #Web only
     .env                           #Globals
     devlog.md
     README.md

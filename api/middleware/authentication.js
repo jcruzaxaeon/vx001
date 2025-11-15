@@ -35,6 +35,7 @@ export const requireAuth = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  * @returns 
+ * @todo [ ] must use session.useId to check for ownership
  */
 export const requireOwnership = (req, res, next) =>{
   const requestedUserId = parseInt(req.params.id || req.params.userId);

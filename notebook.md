@@ -1,12 +1,18 @@
 # Notebook: VX001
 
 # Table of Contents
+1. [SKAR](#skar)
 1. [Procedures](#procedures)
 1. [Current Status](#current-status)
 1. [Chromebook (Mobile Dev Environment)](#chromebook-mobile-development-environment)
 1. [Multiple Linux(Debian) Instances](#multiple-linuxdebian-instances)
 1. [Command Line DB]
 1. [AI Prompt Workspace]
+
+# SKAR
+
+## Current AI Chatlogs
+- Tower Claude: "Building a barebones React frontend for user CRUD API"
 
 # Planning
 
@@ -207,3 +213,5 @@ Please start your server first: npm start
 Nov 01 11:23:49 penguin mariadbd[2852]: 2025-11-01 11:23:49 0 [Note] InnoDB: Buffer pool(s) load completed at 251101 11:23:49
 Nov 01 11:23:49 penguin mariadbd[2852]: 2025-11-01 11:23:49 0 [Note] Server socket created on IP: '127.0.0.1', port: '3306'.
 ```
+
+1. **

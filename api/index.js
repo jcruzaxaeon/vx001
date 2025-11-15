@@ -28,7 +28,10 @@ const app = express();
 const apiPort = config.apiPort; // CM016
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));   //[?]
 
@@ -52,7 +55,8 @@ app.use(session({
    cookie: {
       httpOnly: true,      // Can't access via JavaScript
       secure: false,       // Set to true when using HTTPS in production
-      sameSite: 'strict',  // CSRF protection
+      sameSite: 'lax',     // ?[ ] Want strict CSRF protection, how?
+    //   sameSite: 'strict',  // CSRF protection
       maxAge: 1000 * 60 * 60 * 24 // 24 hours
    }
 }));

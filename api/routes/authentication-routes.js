@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 import User from '../models/User.js';
 import { asyncHandler } from '../middleware/error-handler.js';
 import { validateEmail, validatePassword } from '../middleware/validation.js';
+import { 
+   requireAuth,
+   requireOwnership } from '../middleware/authentication.js';
 
 const router = express.Router();
 
@@ -77,6 +80,9 @@ router.post('/login',
         req.session.userId = user.user_id;
         req.session.email = user.email;
 
+        console.log('Session after login:', req.session); //DEBUG
+        console.log('Session ID:', req.sessionID); //DEBUG
+
         // Return user without sensitive data
         const { password: _, reset_token: __, email_verification_token: ___, ...userResponse } = user.toJSON();
 
@@ -89,7 +95,10 @@ router.post('/login',
 );
 
 // POST /api/auth/logout - Logout user
-router.post('/logout', asyncHandler(async (req, res) => {
+router.post('/logout',
+    requireAuth,
+    // requireOwnership,
+    asyncHandler(async (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             const error = new Error('Logout failed');
@@ -107,6 +116,10 @@ router.post('/logout', asyncHandler(async (req, res) => {
 
 // GET /api/auth/me - Get current user (check if logged in)
 router.get('/me', asyncHandler(async (req, res) => {
+    console.log('Session in /me:', req.session); // DEBUG
+    console.log('Session ID in /me:', req.sessionID); // DEBUG
+    console.log('User ID from session:', req.session.userId); // DEBUG
+
     if (!req.session.userId) {
         const error = new Error('Not authenticated');
         error.type = '/not-authenticated';

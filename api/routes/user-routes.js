@@ -30,7 +30,11 @@ router.get('/',
 
 // GET /api/users/:id - Get single user
 // router.get('/:id', validateUserId, asyncHandler(async (req, res) => {
-router.get('/:id', validateIdNumber, asyncHandler(async (req, res) => {
+router.get('/:id', 
+    validateIdNumber,
+    requireAuth,
+    requireOwnership,
+    asyncHandler(async (req, res) => {
     const user = await User.findByPk(req.params.id, {
         attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
     });

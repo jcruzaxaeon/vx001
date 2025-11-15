@@ -6,34 +6,27 @@
  * 
  */
 
-// import { StrictMode } from 'react'
-// import { createRoot } from 'react-dom/client'
-// import { BrowserRouter } from 'react-router-dom'
-// import App from './App.jsx'
-// import './styles/normalize.css'
-// import './styles/global.css'
-
-// createRoot(document.getElementById('root')).render(
-//     <StrictMode>
-//         <BrowserRouter>
-//             <App />
-//         </BrowserRouter>
-//     </StrictMode>,
-// )
-
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Test from './pages/Test'
+import Register from './pages/Register'
+import Login from './pages/Login'
+// import Users from './pages/Users'
+// import Profile from './pages/Profile'
 import JsonData from './components/jsonData'
 
 function AppRoutes() {
-  return (
+    return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/test" element={<Test />} />
-      <Route path="/api/*" element={<JsonData />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        {/* <Route path="/users" element={<Users />} />
+        <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/api/*" element={<JsonData />} />
     </Routes>
-  )
+    )
 }
 
 export default AppRoutes

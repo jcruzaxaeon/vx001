@@ -1,30 +1,13 @@
 # VX001 Devlog
 
 ## Table of Contents
-1. [Devlog]
 1. [Commits](#commits)
-1. [July 2025](#july-2025)
-1. [October 2025](#october-2025)
+    1. [July 2025](#july-2025)
+    1. [October 2025](#october-2025)
+1. [Log](#log)
+    1. [Nov 25](#november-2025-log)
+    1. [Oct 25](#october-2025-log)
 
-<br><br><br>
-
-
-
-# Daily Log
-
-## October 2025
-
-### 1030
-- Need to turn Chromebook into a mobile dev workstation
-
-<br><br><br>
-
-
-
-# Devlog
-
-## Fri. Oct 31
-[ ] Learn to create, manage db from CLI only.
 
 <br><br><br>
 
@@ -34,7 +17,10 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(api): protect all auth-routes using sessions-only](#cm027) | --- |
+| - | [feat(web): add profile](#cm30) | 20251115b |
+| x | [feat(web): add register, login, logout](#cm29) | 20251115a |
+| x | [feat(api): protect get-specific-user route](#cm28) | - |
+| x | [feat(api): protect all auth-routes using sessions-only](#cm027) | - |
 | x | [feat(api): protect user-routes with auth middleware](#cm026) | 20251030b |
 | x | [feat(api): add session-middleware, auth-routes](#cm025) | 20251030a |
 | x | [refactor(api): create reusable validation logic](#cm024) | 20251028a |
@@ -66,11 +52,19 @@
 
 # November 2025
 
+## Critical Backlog
+- [ ] test(api): update shell-test for get-specific-user
+
+## Feature Backlog
+- [ ] refactor(all): axios to fetch
+- fetch requires no dependencies, native to all browsers
+
 ## Backlog
 Also:
 - [ ] refactor(api): (@tower) extract `validation_reference.js`
 - [ ] refactor(api): explicitly specify `.env`, `.env.api` filepath on tower workstation
 - [ ] refactor(docs): clean language, formats, outlines etc
+- [ ] practice database management (db-mgmt) from CLI-only
 
 ## CM???
 ```
@@ -97,11 +91,36 @@ feat(css): add basic css for pages
 
 ## CM??
 ```
-feat(web): add simple user pages
+feat(api): add session-secret
+- see `./api/index.js` @todo
+```
+
+## CM30
+```
+feat(web): add profile
+```
+
+## CM29
+```
+feat(web): add register, login, logout
+- loading homepage checks for auth
+- on registration/auto-login or login, navbar displays logout
+```
+
+## CM28
+```
+feat(api): protect get-specific-user route
+- route: `GET /api/users/:id`
 
 Also:
-- refactor(all): sync with push from chromebook
+- refactor(all): rename specific .env's
+    - e.g. API's .env to `.env.api` 
+- test(all): ensure workstations sync'd
 ```
+
+## Experimental Commits
+- Experimented with git-merging to sync workstations
+- Commit messages not recorded here (in devlog.md)
 
 ## CM027
 ```
@@ -493,3 +512,22 @@ Reason: SQL practice
 
 #### Commits
 - [docs(all): restructure documentation](#cm021)
+
+<br><br><br>
+
+
+
+# Log
+- [ToC](#table-of-contents)
+
+## November 2025 Log
+- 11/12:
+
+## October 2025 Log
+- 10/31: practice create, manage db from CLI only
+- 10/30: Need to turn Chromebook into a mobile dev workstation
+
+<br><br><br>
+
+
+
