@@ -78,13 +78,17 @@ export function AuthProvider({ children }) {
         }
     }
 
+    const clearUser = () => {
+        setUser(null)
+    }
+
     useEffect(() => {
         // if(!hasCheckedAuth) checkAuth()
         checkAuth()
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, loading, logout, login, checkAuth }}>
+        <AuthContext.Provider value={{ user, loading, logout, login, checkAuth, clearUser }}>
         {children}
         </AuthContext.Provider>
     )

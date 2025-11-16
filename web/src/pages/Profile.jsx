@@ -7,103 +7,107 @@ import '../styles/global.css'
 const API_BASE = 'http://localhost:3001'
 
 function Profile() {
-  const { user: authUser, logout } = useAuth()
-  const [user, setUser] = useState(null)
-  const [editing, setEditing] = useState(false)
-  const [formData, setFormData] = useState({
+    const { user: authUser, logout, clearUser } = useAuth()
+    const [user, setUser] = useState(null)
+    const [editing, setEditing] = useState(false)
+    const [formData, setFormData] = useState({
     username: '',
     email: ''
-  })
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    fetchProfile()
-  }, [])
-
-  const fetchProfile = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/users/me`, {
-        credentials: 'include'
-      })
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch profile')
-      }
-
-      const info = await res.json()
-      console.log('Fetched profile data:', info.data)
-      setUser(info.data)
-      setFormData({
-        username: info.data.username,
-        email: info.data.email
-      })
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
     })
-  }
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
+    const navigate = useNavigate()
 
-  const handleUpdate = async (e) => {
-    e.preventDefault()
-    setError('')
-    setSuccess('')
+    useEffect(() => {fetchProfile()}, [])
 
-    try {
-      const res = await fetch(`${API_BASE}/api/users/me`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(formData)
-      })
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/api/users/me`, {
+            credentials: 'include'
+            })
 
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.message || 'Update failed')
-      }
+            if (!res.ok) {
+            throw new Error('Failed to fetch profile')
+            }
 
-      const data = await res.json()
-      setUser(data)
-      setEditing(false)
-      setSuccess('Profile updated successfully')
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      return
+            const info = await res.json()
+            console.log('Fetched profile data:', info.data)
+            setUser(info.data)
+            setFormData({
+            username: info.data.username,
+            email: info.data.email
+            })
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
-    try {
-      const res = await fetch(`${API_BASE}/api/users/me`, {
-        method: 'DELETE',
-        credentials: 'include'
-      })
-
-      if (!res.ok) {
-        throw new Error('Delete failed')
-      }
-
-      await logout()
-      navigate('/')
-    } catch (err) {
-      setError(err.message)
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
     }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+        setError('')
+        setSuccess('')
+
+        try {
+            const res = await fetch(`${API_BASE}/api/users/me`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(formData)
+            })
+
+            console.log('Update response:', res)
+
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.message || 'Update failed')
+            }
+
+            const data = await res.json()
+            setUser(data.data)
+            setEditing(false)
+            setSuccess('Profile updated successfully')
+        }
+        
+        catch (err) {
+            setError(err.message)
+        }
+    }
+
+    const handleDelete = async () => {
+
+        if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return
+
+        try {
+            const res = await fetch(`${API_BASE}/api/users/me`, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+
+            if (!res.ok) {
+                throw new Error('Delete failed')
+            }
+
+            // await logout()
+            setUser(null)
+            clearUser()
+            navigate('/')
+        } 
+
+        catch (err) { setError(err.message) }
   }
 
   if (loading) return <div className="loading">Loading profile...</div>
+  if (!user) return <div className="error">No user data available.</div>
   if (error && !user) return <div className="error">{error}</div>
 
   return (

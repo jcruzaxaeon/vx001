@@ -129,6 +129,34 @@ router.post('/',
         // res.status(400).json({ error: error.message });
 }));
 
+// PUT /api/users/me - Update own profile
+router.put('/me',
+    requireAuth,
+    asyncHandler(async (req, res) => {
+        const userId = req.session.userId;
+        
+        const [updated] = await User.update(req.body, {
+            where: { user_id: userId }
+        });
+        
+        if (!updated) {
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        
+        const updatedUser = await User.findByPk(userId, {
+            attributes: { exclude: ['password', 'reset_token', 'email_verification_token'] }
+        });
+        
+        res.json({
+            success: true,
+            data: updatedUser,
+            message: 'Profile updated successfully'
+        });
+    })
+);
+
 // PUT /api/users/:id - Update user
 router.put('/:id',
    //  validateEmail,
@@ -164,6 +192,32 @@ router.put('/:id',
         //     return res.status(409).json({ error: 'Email already exists' });
         // }
         // res.status(400).json({ error: error.message });
+}));
+
+// DELETE /api/users/me - Delete user
+router.delete('/me', 
+    requireAuth,
+    asyncHandler(async (req, res) => {
+
+    const deleted = await User.destroy({
+        where: { user_id: req.session.userId }
+    });
+    if(!deleted) {
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    req.session.destroy((err) => {
+        if (err) {
+            const error = new Error('Session destroy error');
+        }
+        res.clearCookie('connect.sid'); // Adjust cookie name if different
+        res.json({
+            success: true,
+            message: 'User deleted successfully'
+        });
+    });
 }));
 
 // DELETE /api/users/:id - Delete user
