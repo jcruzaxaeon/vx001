@@ -17,7 +17,8 @@
 
 | x | Message Title | YYYYMMDDn |
 | - |:- |:- |
-| - | [feat(web): add profile editing, delete](#cm31) | 20251115c |
+| - | 
+| x | [feat(web): add profile editing and deletion](#cm31) | 20251115c |
 | x | [feat(web): add profile page](#cm30) | 20251115b |
 | x | [feat(web): add register, login, logout](#cm29) | 20251115a |
 | x | [feat(api): protect get-specific-user route](#cm28) | - |
@@ -94,6 +95,11 @@ feat(css): add basic css for pages
 ```
 feat(api): add session-secret
 - see `./api/index.js` @todo
+```
+
+## CM32
+```
+feat(all): add node creation
 ```
 
 ## CM31
